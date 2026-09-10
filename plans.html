@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plans &amp; Offers — Muslim Will</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+  html { scrollbar-width: none; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #F7F5F0;
+    color: #16243D;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+  }
+  svg { display: block; }
+
+  /* ============ Sidebar (identical to dashboard) ============ */
+  .sidebar {
+    width: 256.8px;
+    min-width: 256.8px;
+    min-height: 100vh;
+    background: #0D1B32;
+    padding: 19.2px 8px;
+  }
+  .logo {
+    display: flex;
+    align-items: flex-start;
+    gap: 9.6px;
+    padding: 0 8px;
+    margin-bottom: 19.2px;
+  }
+  .logo-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16.8px;
+    font-weight: 500;
+    color: #FFFFFF;
+    line-height: 1.1;
+    margin-top: 1.6px;
+  }
+  .logo-sub {
+    font-size: 8.4px;
+    font-weight: 400;
+    color: #C9A45C;
+    letter-spacing: 0.02em;
+    margin-top: 2.4px;
+  }
+  .nav-active {
+    display: flex;
+    align-items: center;
+    gap: 11.2px;
+    height: 35.2px;
+    padding: 0 16px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6.4px;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nav-section {
+    display: flex;
+    align-items: center;
+    gap: 11.2px;
+    padding: 0 16px 0 14.4px;
+    margin-top: 24px;
+    height: 22.4px;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge {
+    margin-left: auto;
+    font-size: 7.6px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.62);
+    border: 0.8px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    padding: 3.2px 8px;
+    line-height: 1.2;
+    margin-right: 4.8px;
+  }
+  .chev { color: rgba(255,255,255,0.65); }
+  .sub-link {
+    display: flex;
+    align-items: center;
+    gap: 11.2px;
+    padding-left: 24px;
+    margin-top: 12px;
+    height: 20.8px;
+    color: rgba(255,255,255,0.6);
+    font-size: 10.8px;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 2.4px;
+    text-decoration-thickness: 0.8px;
+  }
+  .sub-link .circle { color: rgba(255,255,255,0.4); flex: none; }
+  .sub-link:first-of-type { margin-top: 11.2px; }
+  .sub-link:hover { color: rgba(255,255,255,0.8); }
+  .sub-link:active { color: rgba(255,255,255,0.9); }
+  .nav-active:hover { background: rgba(255,255,255,0.11); }
+  .nav-active:active { background: rgba(255,255,255,0.14); }
+  .sub-link:focus-visible, .nav-active:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+
+  /* ============ Main / topbar (identical) ============ */
+  .main { flex: 1; min-width: 0; }
+  .topbar {
+    height: 58.4px;
+    display: flex;
+    align-items: center;
+    padding: 0 38.4px 0 28px;
+  }
+  .topbar-title { font-size: 12.8px; font-weight: 500; color: #3E4553; }
+  .crumb-root { color: #8A8F99; text-decoration: none; font-weight: 400; }
+  .crumb-root:hover { color: #5C6270; }
+  .crumb-root:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .crumb-sep { color: #B9BDC4; margin: 0 6.4px; font-weight: 400; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; }
+  .bell-wrap { position: relative; margin-right: 24px; }
+  .bell-wrap .bell { color: #1B2437; }
+  .bell-badge {
+    position: absolute;
+    top: -13.6px;
+    right: -15.2px;
+    width: 13.6px;
+    height: 13.6px;
+    background: #C9A45C;
+    border-radius: 999px;
+    color: #FFFFFF;
+    font-size: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .get-help {
+    height: 35.2px;
+    padding: 0 17.6px;
+    background: #FFFFFF;
+    border: 0.8px solid #DDD9CF;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1E2A44;
+    margin-right: 20.8px;
+    cursor: pointer;
+  }
+  .get-help:hover { background: #FBFAF7; }
+  .get-help:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .get-help:active { transform: translateY(1px); }
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #DCB670;
+    color: #2A3852;
+    font-size: 9.6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9.6px;
+  }
+  .user-name { font-size: 12.4px; font-weight: 600; color: #1B2437; margin-right: 8px; }
+  .user-chev { color: #1B2437; }
+
+  /* ============ Content ============ */
+  .content { max-width: 1039.2px; margin: 35.2px auto 48px; }
+
+  .eyebrow {
+    font-size: 9.6px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: #C9A45C;
+  }
+  .page-head h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #16243D;
+    margin-top: 8px;
+  }
+  .page-sub {
+    font-size: 12.4px;
+    font-weight: 400;
+    color: #6F7580;
+    margin-top: 6.4px;
+  }
+
+  /* ============ Filters ============ */
+  .filters { display: flex; gap: 9.6px; margin-top: 20.8px; }
+  .filter-pill {
+    height: 30.4px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #FFFFFF;
+    border: 0.8px solid #DDD9CF;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11.2px;
+    font-weight: 500;
+    color: #3E4553;
+    cursor: pointer;
+  }
+  .filter-pill:hover { background: #FBFAF7; }
+  .filter-pill:active { transform: translateY(1px); }
+  .filter-pill:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .filter-pill.active {
+    background: #0D1B32;
+    border-color: #0D1B32;
+    color: #FFFFFF;
+  }
+  .filter-pill.active:hover { background: #16274A; }
+
+  /* ============ Plan cards ============ */
+  .plan-cards {
+    margin-top: 20.8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12.8px;
+    align-items: stretch;
+  }
+  .plan-card {
+    background: #FFFFFF;
+    border: 0.8px solid #EAE6DC;
+    border-radius: 11.2px;
+    padding: 19.2px;
+    display: flex;
+    flex-direction: column;
+  }
+  .plan-card[hidden] { display: none; }
+  .plan-card.primary {
+    background: #FDFBF6;
+    border: 1.2px solid #C9A45C;
+    box-shadow: 0 6.4px 19.2px rgba(201,164,92,0.14), 0 1.6px 4.8px rgba(22,35,63,0.05);
+  }
+  .offer-eyebrow {
+    font-size: 8.8px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: #C9A45C;
+    margin-bottom: 8px;
+  }
+  .plan-title { font-size: 12.8px; font-weight: 600; color: #1C2B4A; }
+  .plan-card.primary .plan-title { font-size: 14.4px; }
+  .plan-desc {
+    font-size: 11.6px;
+    font-weight: 400;
+    color: #6F7580;
+    line-height: 18.4px;
+    margin-top: 6.4px;
+  }
+  .price-row { display: flex; align-items: baseline; gap: 8px; margin-top: 12.8px; }
+  .price-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 21.6px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #16233F;
+  }
+  .price-was { font-size: 11.2px; color: #9CA1AB; text-decoration: line-through; }
+  .price-free { font-size: 13.6px; font-weight: 600; color: #16233F; margin-top: 12.8px; }
+  .save-badge {
+    background: #C09B4E;
+    color: #FFFDF6;
+    font-size: 10.4px;
+    font-weight: 600;
+    padding: 3.2px 9.6px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .plan-list { list-style: none; margin-top: 12.8px; display: flex; flex-direction: column; gap: 6.4px; }
+  .plan-list li {
+    display: flex;
+    align-items: center;
+    gap: 7.2px;
+    font-size: 11.2px;
+    font-weight: 400;
+    color: #3E4553;
+  }
+  .plan-list li svg { flex: none; }
+  .plan-list .yes svg { color: #C9A45C; }
+  .plan-list .no { color: #8A8F99; }
+  .plan-list .no svg { color: #B9BDC4; }
+  .pill-row { margin-top: 12.8px; }
+  .plan-cta { margin-top: auto; padding-top: 16px; }
+  .btn-gold, .btn-outline, .btn-ghost {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 35.2px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #16233F;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-gold { background: #C9A45C; border: none; }
+  .btn-gold:hover { background: #D2AE66; }
+  .btn-gold:active { transform: translateY(1px); }
+  .btn-gold:focus-visible { outline: 2px solid #16233F; outline-offset: 2px; }
+  .btn-outline { background: #FFFFFF; border: 0.8px solid #DDD9CF; }
+  .btn-outline:hover { background: #FBFAF7; }
+  .btn-outline:active { transform: translateY(1px); }
+  .btn-outline:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .btn-ghost { background: transparent; border: none; }
+  .btn-ghost:hover { color: #3B4A6B; }
+  .btn-ghost:active { color: #0F1A30; }
+  .btn-ghost:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+
+  /* ============ Member strip ============ */
+  .member-strip {
+    margin-top: 20.8px;
+    display: flex;
+    align-items: center;
+    gap: 9.6px;
+    height: 48px;
+    padding: 0 20.8px;
+    background: #FCFAF4;
+    border: 0.8px solid #E7DCC4;
+    border-radius: 11.2px;
+  }
+  .member-strip svg { color: #C9A45C; flex: none; }
+  .member-strip strong { font-size: 11.6px; font-weight: 600; color: #1C2B4A; }
+  .member-strip span { font-size: 11.2px; font-weight: 400; color: #6F7580; }
+
+  /* ============ Request modals ============ */
+  .rm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 27, 49, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    z-index: 90;
+  }
+  .rm-overlay.open { opacity: 1; pointer-events: auto; }
+  .rm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 384px;
+    max-width: 92vw;
+    background: #F7F5F0;
+    border-radius: 12.8px;
+    box-shadow: 0 16px 48px rgba(13, 27, 49, 0.3);
+    z-index: 91;
+    padding: 20.8px;
+    transform: translate(-50%, -50%) scale(0.97);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  }
+  .rm-modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .rm-close {
+    position: absolute;
+    top: 12.8px;
+    right: 12.8px;
+    width: 28.8px;
+    height: 28.8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #3E4553;
+    cursor: pointer;
+  }
+  .rm-close:hover { background: #EFEBE0; }
+  .rm-close:active { transform: translateY(1px); }
+  .rm-close:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .rm-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16.8px;
+    font-weight: 500;
+    color: #16243D;
+    margin-top: 6.4px;
+    outline: none;
+  }
+  .rm-modal .rm-title:first-child { margin-top: 0; }
+  .rm-text { font-size: 11.6px; font-weight: 400; color: #6F7580; line-height: 18.4px; margin-top: 9.6px; }
+  .rm-field { margin-top: 12.8px; }
+  .rm-field label { display: block; font-size: 10.8px; font-weight: 500; color: #3E4553; margin-bottom: 4.8px; }
+  .rm-input {
+    width: 100%;
+    height: 35.2px;
+    padding: 0 11.2px;
+    background: #FFFFFF;
+    border: 0.8px solid #DDD9CF;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11.6px;
+    color: #16243D;
+  }
+  .rm-input::placeholder { color: #9CA1AB; }
+  .rm-input:focus { outline: none; border-color: #C9A45C; box-shadow: 0 0 0 2.4px rgba(201, 164, 92, 0.25); }
+  .rm-input.invalid { border-color: #B3413A; }
+  .rm-err { font-size: 10.4px; font-weight: 400; color: #B3413A; margin-top: 4.8px; }
+  .rm-err[hidden] { display: none; }
+  .rm-submit { margin-top: 16px; }
+  .rm-view[hidden] { display: none; }
+  .rm-success { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 9.6px 0 0; }
+  .rm-success-icon {
+    width: 44.8px;
+    height: 44.8px;
+    border-radius: 999px;
+    background: #FDFBF6;
+    border: 1.2px solid #C9A45C;
+    color: #C9A45C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .rm-success .rm-text { margin-top: 12.8px; max-width: 288px; }
+  .rm-done { margin-top: 16px; width: 100%; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <!-- Logo mark (recreated placeholder — exact asset not in brand folder) -->
+    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+      <defs>
+        <linearGradient id="lg1" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#F4E9CE"/><stop offset="1" stop-color="#C9A45C"/>
+        </linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="8" fill="#13233F"/>
+      <path d="M9 28.5L13.5 11.5L17.5 23" stroke="#F5EEDD" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
+      <path d="M17.5 23L21.5 11.5L26 28.5L30.5 11.5" stroke="url(#lg1)" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
+    </svg>
+    <div>
+      <div class="logo-name">Muslim Will</div>
+      <div class="logo-sub">a product of Patriva</div>
+    </div>
+  </div>
+
+  <a class="nav-active" href="index.html">
+    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#DCCCA4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    My Estate Plan
+  </a>
+
+  <div class="nav-section">
+    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+    My Bridge
+    <span class="badge">PREVIEW</span>
+    <svg class="chev" width="11.2" height="11.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <a class="sub-link" href="#">
+    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    Choose a plan to begin
+  </a>
+
+  <div class="nav-section">
+    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="11.5" r="4"/><path d="M12 9.8v1.7l1.2 1.2"/><path d="M7.5 21v-1.5M16.5 21v-1.5"/></svg>
+    My Vault
+    <span class="badge">PREVIEW</span>
+    <svg class="chev" width="11.2" height="11.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <a class="sub-link" href="#">
+    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    Obligations Register
+  </a>
+  <a class="sub-link" href="#">
+    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    Estate Inventory
+  </a>
+  <a class="sub-link" href="#">
+    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    Sealed Disclosures
+  </a>
+  <a class="sub-link" href="#">
+    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    Final Words
+  </a>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-title">
+      <a class="crumb-root" href="index.html">My Vault</a><span class="crumb-sep">/</span>Plans &amp; Offers
+    </span>
+    <div class="topbar-right">
+      <div class="bell-wrap">
+        <svg class="bell" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="bell-badge">1</span>
+      </div>
+      <button class="get-help">Get help</button>
+      <div class="avatar">NM</div>
+      <span class="user-name">Nisreen</span>
+      <svg class="user-chev" width="12.8" height="12.8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-head">
+      <div class="eyebrow">MEMBER OPTIONS</div>
+      <h1>Explore what&rsquo;s available to you.</h1>
+      <div class="page-sub">As a Vault member, you can access additional estate planning options and exclusive member pricing.</div>
+    </div>
+
+    <div class="filters" role="tablist" aria-label="Filter options">
+      <button class="filter-pill active" data-filter="all">All options</button>
+      <button class="filter-pill" data-filter="will">Islamic Will</button>
+      <button class="filter-pill" data-filter="family">Family Vault</button>
+      <button class="filter-pill" data-filter="templates">Templates</button>
+    </div>
+
+    <div class="plan-cards">
+      <!-- CARD 1 — ISLAMIC WILL (primary) -->
+      <div class="plan-card primary" data-category="will">
+        <div class="offer-eyebrow">MEMBER OFFER</div>
+        <div class="plan-title">Islamic Will Package</div>
+        <p class="plan-desc">Create or update your Islamic Will with guided support and review aligned with Faraid.</p>
+        <div class="price-row">
+          <span class="price-big">$275 CAD</span>
+          <span class="price-was">$350 CAD</span>
+          <span class="save-badge">Save $75</span>
+        </div>
+        <ul class="plan-list">
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Guided completion</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Faraid-aligned</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Paralegal support</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Scholar review</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Legal review</li>
+        </ul>
+        <div class="plan-cta">
+          <button class="btn-gold" id="will-open">
+            View Will options
+            <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 2 — FAMILY VAULT (secondary) -->
+      <div class="plan-card" data-category="family">
+        <div class="plan-title">Family Vault</div>
+        <p class="plan-desc">Keep your family&rsquo;s important estate information together in one secure Vault.</p>
+        <ul class="plan-list">
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 5 members</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Shared access</li>
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Save more per person</li>
+        </ul>
+        <div class="pill-row"><span class="save-badge">Save 33% per person</span></div>
+        <div class="plan-cta">
+          <button class="btn-outline" id="compare-family" data-open-family-drawer>
+            Compare Family Vault
+            <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 3 — FREE WASIYYAH TEMPLATE (tertiary) -->
+      <div class="plan-card" data-category="templates">
+        <div class="plan-title">Free Wasiyyah Template</div>
+        <p class="plan-desc">Prefer to start on your own? Use a self-service template to prepare a basic Wasiyyah at your own pace.</p>
+        <div class="price-free">Free</div>
+        <ul class="plan-list">
+          <li class="yes"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Self-service</li>
+          <li class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>No guided review</li>
+          <li class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>No scholar review</li>
+          <li class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>No legal review</li>
+        </ul>
+        <div class="plan-cta">
+          <button class="btn-ghost" id="template-open">
+            Use free template
+            <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-strip">
+      <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+      <strong>Exclusive member pricing</strong>
+      <span>As a Vault member, special pricing may be available on selected estate planning services.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Request modals ============ -->
+<div class="rm-overlay"></div>
+
+<div class="rm-modal" id="will-modal" role="dialog" aria-modal="true" aria-labelledby="will-modal-title" hidden>
+  <button class="rm-close" type="button" aria-label="Close dialog">
+    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+  </button>
+  <div class="rm-view rm-form-view">
+    <div class="offer-eyebrow">MEMBER OFFER</div>
+    <h2 class="rm-title" id="will-modal-title" tabindex="-1">Islamic Will Package</h2>
+    <div class="price-row">
+      <span class="price-big">$275 CAD</span>
+      <span class="price-was">$350 CAD</span>
+      <span class="save-badge">Save $75</span>
+    </div>
+    <p class="rm-text">Request this package and our team will contact you to begin your Islamic Will.</p>
+    <form novalidate>
+      <div class="rm-field">
+        <label for="will-name">Full name</label>
+        <input class="rm-input" id="will-name" type="text" autocomplete="name">
+        <div class="rm-err" hidden></div>
+      </div>
+      <div class="rm-field">
+        <label for="will-email">Email</label>
+        <input class="rm-input" id="will-email" type="email" autocomplete="email" placeholder="you@email.com">
+        <div class="rm-err" hidden></div>
+      </div>
+      <button class="btn-gold rm-submit" type="submit">
+        Request this package
+        <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+  </div>
+  <div class="rm-view rm-success-view" hidden>
+    <div class="rm-success">
+      <div class="rm-success-icon">
+        <svg width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <p class="rm-text" data-success-msg tabindex="-1"></p>
+      <button class="btn-outline rm-done" type="button">Done</button>
+    </div>
+  </div>
+</div>
+
+<div class="rm-modal" id="template-modal" role="dialog" aria-modal="true" aria-labelledby="template-modal-title" hidden>
+  <button class="rm-close" type="button" aria-label="Close dialog">
+    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+  </button>
+  <div class="rm-view rm-form-view">
+    <h2 class="rm-title" id="template-modal-title" tabindex="-1">Free Wasiyyah Template</h2>
+    <p class="rm-text">Enter your email and we&rsquo;ll send you the template so you can start at your own pace.</p>
+    <form novalidate>
+      <div class="rm-field">
+        <label for="template-email">Email</label>
+        <input class="rm-input" id="template-email" type="email" autocomplete="email" placeholder="you@email.com">
+        <div class="rm-err" hidden></div>
+      </div>
+      <button class="btn-gold rm-submit" type="submit">
+        Email me the template
+        <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+  </div>
+  <div class="rm-view rm-success-view" hidden>
+    <div class="rm-success">
+      <div class="rm-success-icon">
+        <svg width="19.2" height="19.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <p class="rm-text" data-success-msg tabindex="-1"></p>
+      <button class="btn-outline rm-done" type="button">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ---------- category filters (with #hash preselection) ---------- */
+  const pills = Array.from(document.querySelectorAll('.filter-pill'));
+  function applyFilter(btn) {
+    pills.forEach((b) => b.classList.toggle('active', b === btn));
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.plan-card').forEach((card) => {
+      card.hidden = filter !== 'all' && card.dataset.category !== filter;
+    });
+  }
+  pills.forEach((btn) => btn.addEventListener('click', () => applyFilter(btn)));
+  function applyHashFilter() {
+    const pill = pills.find((b) => b.dataset.filter === location.hash.slice(1));
+    if (pill) applyFilter(pill);
+  }
+  applyHashFilter();
+  window.addEventListener('hashchange', applyHashFilter);
+
+  /* ---------- request modals ---------- */
+  const rmOverlay = document.querySelector('.rm-overlay');
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setError(input, message) {
+    const err = input.parentElement.querySelector('.rm-err');
+    input.classList.toggle('invalid', !!message);
+    err.textContent = message || '';
+    err.hidden = !message;
+  }
+
+  function modalController(modal, trigger, validateAndMessage) {
+    const closeBtn = modal.querySelector('.rm-close');
+    const formView = modal.querySelector('.rm-form-view');
+    const successView = modal.querySelector('.rm-success-view');
+    const form = modal.querySelector('form');
+    const doneBtn = modal.querySelector('.rm-done');
+    const title = modal.querySelector('.rm-title');
+    let lastFocus = null;
+    let isOpen = false;
+
+    function reset() {
+      form.reset();
+      modal.querySelectorAll('.rm-input').forEach((i) => setError(i, ''));
+      formView.hidden = false;
+      successView.hidden = true;
+    }
+    function open() {
+      lastFocus = document.activeElement;
+      reset();
+      modal.hidden = false;
+      requestAnimationFrame(() => {
+        rmOverlay.classList.add('open');
+        modal.classList.add('open');
+      });
+      document.body.style.overflow = 'hidden';
+      isOpen = true;
+      title.focus();
+      document.addEventListener('keydown', onKeydown, true);
+      rmOverlay.addEventListener('click', close);
+    }
+    function close() {
+      if (!isOpen) return;
+      isOpen = false;
+      rmOverlay.classList.remove('open');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeydown, true);
+      rmOverlay.removeEventListener('click', close);
+      modal.addEventListener('transitionend', () => { if (!isOpen) modal.hidden = true; }, { once: true });
+      if (lastFocus) lastFocus.focus();
+    }
+    function onKeydown(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') {
+        const items = Array.from(modal.querySelectorAll('button, input')).filter(
+          (el) => !el.disabled && el.offsetParent !== null
+        );
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        else if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      }
+    }
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = validateAndMessage(modal);
+      if (!message) return;
+      // TODO: submit the request to the backend here — no service call exists yet.
+      const msgEl = successView.querySelector('[data-success-msg]');
+      msgEl.textContent = message;
+      formView.hidden = true;
+      successView.hidden = false;
+      msgEl.focus();
+    });
+    doneBtn.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
+    trigger.addEventListener('click', open);
+  }
+
+  modalController(
+    document.getElementById('will-modal'),
+    document.getElementById('will-open'),
+    (modal) => {
+      const name = modal.querySelector('#will-name');
+      const email = modal.querySelector('#will-email');
+      let ok = true;
+      if (name.value.trim().length < 2) { setError(name, 'Please enter your full name.'); ok = false; }
+      else setError(name, '');
+      if (!EMAIL_RE.test(email.value.trim())) { setError(email, 'Please enter a valid email address.'); ok = false; }
+      else setError(email, '');
+      if (!ok) {
+        modal.querySelector('.rm-input.invalid').focus();
+        return null;
+      }
+      return `Request received — we’ll contact you at ${email.value.trim()} to begin your Islamic Will.`;
+    }
+  );
+
+  modalController(
+    document.getElementById('template-modal'),
+    document.getElementById('template-open'),
+    (modal) => {
+      const email = modal.querySelector('#template-email');
+      if (!EMAIL_RE.test(email.value.trim())) {
+        setError(email, 'Please enter a valid email address.');
+        email.focus();
+        return null;
+      }
+      setError(email, '');
+      return `Request received — the template will be emailed to ${email.value.trim()}.`;
+    }
+  );
+
+  document.querySelectorAll('.rm-input').forEach((input) => {
+    input.addEventListener('input', () => setError(input, ''));
+  });
+</script>
+<script src="family-drawer.js" defer></script>
+
+</body>
+</html>
