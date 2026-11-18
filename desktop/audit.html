@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muslim Will — desktop audit</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0d2340; --gold-text: #7d6328; --page: #f7f5f0; --text: #4a5462; --line: #e3e6ea; --soft: #f4efe4; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--page); color: var(--text); font: 500 16.5px/1.6 'Manrope', sans-serif; padding: 40px 24px 80px; }
+  main { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  h1 { font: 400 42px/1.1 'DM Serif Display', serif; color: var(--navy); }
+  h2 { font: 400 28px/1.15 'DM Serif Display', serif; color: var(--navy); margin-top: 32px; }
+  p, li { max-width: 78ch; }
+  ul { padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+  b, th { color: var(--navy); font-weight: 800; }
+  a { color: var(--gold-text); font-weight: 700; }
+  .eb { font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-text); }
+  .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 15.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-top: 1px solid #edf0f3; }
+  thead th { border-top: 0; background: var(--soft); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .tag { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 13.5px; font-weight: 800; white-space: nowrap; }
+  .keep { background: #e3f1e6; color: #1f5e33; } .mod { background: #fbefd9; color: #7a4b06; } .merge { background: #e6ebf2; color: #0d2340; } .rm { background: #eef0f3; color: #3d4653; } .add { background: var(--navy); color: #faf7f1; } .gap { background: #f8e3e3; color: #8c2222; }
+  code { font: 600 14.5px ui-monospace, Consolas, monospace; color: var(--navy); background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eb">Muslim Will · desktop</p>
+  <h1>Desktop audit</h1>
+  <p>Every desktop page of the current product, what happened to it, and where it lives in the <a href="index.html">desktop prototype</a>. The baseline is the current site as recreated in <a href="../baseline/index.html">baseline/</a>, plus the desktop artboards on the “Package Selection Redesign” canvas.</p>
+
+  <h2>Existing desktop pages</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Current page</th><th>Decision</th><th>What changed</th><th>Now at</th></tr></thead>
+    <tbody>
+      <tr><th>Sidebar and top bar</th><td><span class="tag keep">Keep</span> <span class="tag mod">Modify</span></td><td>Same structure: logo, Dashboard, My Will, My Vault, session clock; title, bell, Get help, avatar menu. My Will lists chapters only while writing, then Review status and View my Will. My Vault lists its sections only when owned. Added Family &amp; access and Documents.</td><td>every signed-in page</td></tr>
+      <tr><th>Dashboard</th><td><span class="tag mod">Modify</span></td><td>Was one hero that always said “Build your Bridge” and “Starter plan is active”, even with no plan. Now one main card that follows the user’s state, a “Your plan” panel, a chapter list or review timeline, and one recommendation.</td><td><code>#/home</code></td></tr>
+      <tr><th>“Package &amp; payment” notice on the Dashboard</th><td><span class="tag rm">Remove</span></td><td>It announced “choose a package and pay” part-way through. The Will is free; payment appears only after a paid service is chosen.</td><td>—</td></tr>
+      <tr><th>My Estate Plan (two-step plan page)</th><td><span class="tag merge">Merge</span></td><td>“Step 1 your will, Step 2 your Vault” duplicated the Dashboard and forced a route choice. The Will step is the Dashboard’s main card; the Vault step is the Vault page.</td><td><code>#/home</code>, <code>#/vault</code></td></tr>
+      <tr><th>Vault packages (“Try Will + Vault free for 30 days”)</th><td><span class="tag mod">Modify</span></td><td>Now the Vault discovery page: headline, one line, price from config, one button, four modules. The trial wording is gone until the business confirms it.</td><td><code>#/vault</code> (not subscribed), <code>#/vault-entry</code></td></tr>
+      <tr><th>Plan / package selection (canvas: Current, v2, v2b, v3, Original)</th><td><span class="tag rm">Remove</span></td><td>Forced plan choice before the Will.</td><td>—</td></tr>
+      <tr><th>Payment (canvas)</th><td><span class="tag mod">Modify</span></td><td>One checkout: card form on the left, order on the right. Reached only from Start My Vault or Choose Notarized.</td><td><code>#/pay/…</code></td></tr>
+      <tr><th>Confirmation (canvas)</th><td><span class="tag mod">Modify</span></td><td>Compact: status, one next action.</td><td><code>#/paid/…</code></td></tr>
+      <tr><th>Application setup: About You</th><td><span class="tag mod">Modify</span></td><td>Kept the section stepper and form card. Light tinted header, grouped fields in two columns where they pair up, a “Why we ask” rail, Canadian phone check, date pickers.</td><td><code>#/will/c/0/…</code></td></tr>
+      <tr><th>Your Family, Charitable Bequests, Trusted People, Witnesses, Review &amp; Submit</th><td><span class="tag mod">Modify</span></td><td>Same six chapters. The current site only showed these locked, so their content follows the meeting: reuse of spouse and family, optional executor contact, Wasiyyah budget, two witnesses with the 18+ rule, review by chapter.</td><td><code>#/will/c/1…5</code></td></tr>
+      <tr><th>“Information” pop-up for locked chapters</th><td><span class="tag rm">Remove</span></td><td>Chapters not yet reachable are shown greyed in the sidebar and cannot be opened, so there is nothing to explain after the click.</td><td>—</td></tr>
+      <tr><th>“View Complete My Bridge”</th><td><span class="tag mod">Modify</span></td><td>Renamed “View my Will”. Available from submission, with Print.</td><td><code>#/will/view</code></td></tr>
+      <tr><th>Print / Download will</th><td><span class="tag mod">Modify</span></td><td>Was “Access Denied” before payment. Printing the basic Will is free; when it unlocks is one config value.</td><td><code>#/will/view</code>, <code>#/documents</code></td></tr>
+      <tr><th>Signing appointment</th><td><span class="tag mod">Modify</span></td><td>Two routes side by side: Sign at home (included) and Notarized Attestation (paid). Opens only when the Will is Ready to Sign.</td><td><code>#/sign</code></td></tr>
+      <tr><th>My Vault dashboard (new page 1)</th><td><span class="tag mod">Modify</span></td><td>The existing My Vault page, rebuilt from the client’s page: readiness ring with what is left, yearly review, four sections with status, Trusted People, how release works, Vault settings. Guided / Manual switch in the top bar.</td><td><code>#/vault</code></td></tr>
+      <tr><th>Vault sections and Add forms (new pages 3–6)</th><td><span class="tag mod">Modify</span></td><td>Each section groups its items (debts, mahr, zakat; 14 asset categories), shows totals and tags (Joint, Abroad, Not in probate, Confirm beneficiary, Amanah). Add and Edit are full forms with the client’s fields; Remove asks first.</td><td><code>#/vault/obl</code> <code>assets</code> <code>sealed</code> <code>words</code>, <code>…/add</code>, <code>…/edit/n</code></td></tr>
+      <tr><th>Trusted People (new page 7)</th><td><span class="tag add">Add</span> <span class="tag merge">Merge</span></td><td>Executors come from the Will and are read-only here; the final fallback is signed here; recipients are added in one dialog. The earlier “People with access” list is the same data.</td><td><code>#/vault/people</code></td></tr>
+      <tr><th>My Profile: Personal, Security, My Plan, Billing &amp; Payments, Family Plan</th><td><span class="tag keep">Keep</span> <span class="tag mod">Modify</span></td><td>Same five tabs. My Plan lists services with status and price instead of “No active plan”. Billing shows payments only if there are any. Family Plan keeps its place but shows no price until config provides one.</td><td><code>#/profile/…</code></td></tr>
+      <tr><th>Old Edit Profile page (green design)</th><td><span class="tag merge">Merge</span></td><td>Into Profile › Personal › Edit details.</td><td><code>#/profile</code></td></tr>
+      <tr><th>Sign in, Register</th><td><span class="tag mod">Modify</span></td><td>Same split layout, lighter left panel. The preselected “Will + Vault $7.99” card is gone. Register is one short form: name, email, password.</td><td><code>#/signin</code>, <code>#/account</code></td></tr>
+      <tr><th>Notifications, Get help</th><td><span class="tag mod">Modify</span></td><td>The bell opens a list that follows the user’s state and counts only items that need action. Get help opens a short dialog.</td><td>top bar</td></tr>
+      <tr><th>Session clock</th><td><span class="tag keep">Keep</span></td><td>Same 60 minutes and Extend, as one compact row.</td><td>sidebar</td></tr>
+      <tr><th>Receipts</th><td><span class="tag merge">Merge</span></td><td>Into Profile › Billing &amp; Payments.</td><td><code>#/profile/billing</code></td></tr>
+      <tr><th>Access Denied in the admin layout; Referrals</th><td><span class="tag rm">Remove</span></td><td>A client never reaches an admin page in the new navigation.</td><td>—</td></tr>
+      <tr><th>Reminders, Release settings, Export and close (new pages 8–10)</th><td><span class="tag add">Add</span></td><td>Built as the four Vault settings tabs. Pause makes the Vault read-only; Close returns to the discovery page with Reopen.</td><td><code>#/vault/reminders</code> <code>release</code> <code>account</code></td></tr>
+      <tr><th>Guided wizard (new page 2)</th><td><span class="tag add">Add</span></td><td>Seven steps. Finishing turns the answers into real items; anything without details is tagged “Add details” in its section.</td><td><code>#/vault/guided</code></td></tr>
+      <tr><th>Recipient, executor and staff screens (canvas)</th><td><span class="tag keep">Keep</span></td><td>Different users. Outside this journey.</td><td>not in prototype</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Added</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Page</th><th>Decision</th><th>Why</th><th>At</th></tr></thead>
+    <tbody>
+      <tr><th>Value journey, six steps</th><td><span class="tag add">Add</span></td><td>Builds trust before the account. Step 2 asks five quick things about the family and step 3 shows the visitor’s own Islamic shares; those answers are reused in the Will. The share numbers are a prototype stand-in for the API’s inheritance table.</td><td><code>#/start/…</code></td></tr>
+      <tr><th>Product tour, four steps</th><td><span class="tag add">Add</span></td><td>Only for people who arrive without the funnel.</td><td><code>#/tour/…</code></td></tr>
+      <tr><th>Chapter saved</th><td><span class="tag add">Add</span></td><td>Compact confirmation between chapters.</td><td><code>#/will/done/…</code></td></tr>
+      <tr><th>My Will overview and review status</th><td><span class="tag add">Add</span></td><td>Chapter table while writing; Now / From you / Next and a timeline after submission.</td><td><code>#/will</code></td></tr>
+      <tr><th>Sign at home</th><td><span class="tag add">Add</span></td><td>Three steps, then confirm.</td><td><code>#/sign/home</code></td></tr>
+      <tr><th>Family &amp; access</th><td><span class="tag add">Add</span></td><td>One place for the people entered in the Will, their roles, and invitations.</td><td><code>#/family</code></td></tr>
+      <tr><th>Documents</th><td><span class="tag add">Add</span></td><td>The Will, a signed copy upload once completed, the attestation.</td><td><code>#/documents</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>No reference to work from</h2>
+  <p>These were on the audit list but appear in none of the screenshots or artboards I was given, so they are not in the prototype:</p>
+  <ul>
+    <li><span class="tag gap">Missing</span> <b>Appendix A / Appendix B.</b></li>
+    <li><span class="tag gap">Missing</span> <b>The completed Will document</b> as it is generated today. “View my Will” shows the answers by chapter, not the legal text.</li>
+    <li><span class="tag gap">Missing</span> <b>Document upload inside the Will chapters.</b> The only upload here is the signed copy, which is my assumption.</li>
+    <li><span class="tag gap">Missing</span> <b>Scholar and legal review pages as they exist today</b>, and the real reviewer question format.</li>
+    <li><span class="tag gap">Missing</span> <b>Dashboards for a client with a plan</b> (Starter, Bridge, Premium) and the old <code>/Will/Index</code> page.</li>
+    <li><span class="tag gap">Missing</span> <b>Family Plan pricing and checkout.</b></li>
+  </ul>
+  <p>Send screenshots of any of these and they can be folded in.</p>
+
+  <h2>Checked before hand-off</h2>
+  <ul>
+    <li>Opened at 1440, 1280 and 1024. At each width the sidebar and wide content area stay; nothing falls back to a phone layout.</li>
+    <li>An automated walk-through ran the whole product at 1440: journey, account, all six chapters, review, submission, each review stage, both signing routes, checkout, Vault, Family &amp; access, Documents, the five Profile tabs, the other two entries and seven state presets. 58 screens, no script errors, no sideways scrolling, every control at least 44px tall on the last screen measured.</li>
+    <li>Not checked: 768–1023 (the sidebar becomes an icon rail there; I did not review it screen by screen), colour contrast with a tool, and printing.</li>
+  </ul>
+</main>
+</body>
+</html>

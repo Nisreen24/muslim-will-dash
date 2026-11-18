@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muslim Will — revamp plan</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0d2340; --gold-text: #7d6328; --page: #f7f5f0; --text: #4a5462; --line: #e3e6ea; --soft: #f4efe4; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--page); color: var(--text); font: 500 16.5px/1.6 'Manrope', sans-serif; padding: 32px 16px 80px; }
+  main { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  h1 { font: 400 40px/1.1 'DM Serif Display', serif; color: var(--navy); }
+  h2 { font: 400 28px/1.15 'DM Serif Display', serif; color: var(--navy); margin-top: 34px; scroll-margin-top: 16px; }
+  h3 { font: 800 17px/1.3 'Manrope', sans-serif; color: var(--navy); margin-top: 10px; }
+  p, li { max-width: 74ch; }
+  ul, ol { padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+  b, th { color: var(--navy); font-weight: 800; }
+  a { color: var(--gold-text); font-weight: 700; }
+  .eb { font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-text); }
+  .box { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .flow { background: var(--soft); border: 1px solid #e8e0d0; border-radius: 14px; padding: 16px 20px; font-weight: 700; color: var(--navy); line-height: 1.9; }
+  .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 15.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-top: 1px solid #edf0f3; }
+  thead th { border-top: 0; background: var(--soft); font-size: 13.5px; letter-spacing: .04em; text-transform: uppercase; }
+  .tag { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 13.5px; font-weight: 800; white-space: nowrap; }
+  .keep { background: #e3f1e6; color: #1f5e33; } .mod { background: #fbefd9; color: #7a4b06; } .merge { background: #e6ebf2; color: #0d2340; } .rm { background: #eef0f3; color: #3d4653; } .new { background: var(--navy); color: #faf7f1; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 8px; }
+  nav.toc a { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; text-decoration: none; font-size: 15px; }
+  code { font: 600 14.5px ui-monospace, Consolas, monospace; color: var(--navy); background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eb">Muslim Will · revamp</p>
+  <h1>Implementation plan</h1>
+  <p>What changed after the client meeting, and where each change lives in the prototype. Open the <a href="index.html">prototype</a>; its “Prototype · change state” panel loads every state listed here.</p>
+
+  <div class="box">
+    <h3>Read this first</h3>
+    <ul>
+      <li><b>Visual baseline.</b> The linked canvas is “Package Selection Redesign”: package, payment, confirmation, Vault and handover screens. It has no funnel, onboarding, Will wizard, Home states or bottom navigation. Those were built new, using the canvas’s colours and components (navy <code>#0d2340</code>, gold <code>#c8a868</code>, parchment, 54px buttons, 16–17px body).</li>
+      <li><b>Fonts.</b> The canvas uses Cormorant Garamond and DM Sans. The brief names DM Serif Display and Manrope, so the prototype uses those. Switching back is two lines in <code>app.css</code>.</li>
+      <li><b>Where it lives.</b> Local files in <code>revamp/</code>. Nothing was changed on the shared canvas.</li>
+      <li><b>Not confirmed by the business.</b> Final prices, the notarized price, when printing unlocks, editing during review, and what happens after notarized payment. Each is one value in <code>config.js</code>; no screen hard-codes it.</li>
+    </ul>
+  </div>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#a">A Sitemap</a><a href="#b">B Flow</a><a href="#c">C Screens</a><a href="#d">D CTA map</a><a href="#e">E User states</a><a href="#f">F Home</a><a href="#g">G Vault</a><a href="#h">H Payment</a><a href="#i">I Progress</a><a href="#j">J Writing</a><a href="#k">K QA</a>
+  </nav>
+
+  <h2 id="a">A. Sitemap</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Area</th><th>Screens</th><th>Route</th></tr></thead>
+    <tbody>
+      <tr><th>Entry</th><td>Value journey (6 steps) · Product tour (4 steps, direct entry only) · Vault discovery (Vault entry)</td><td><code>#/start</code> <code>#/tour</code> <code>#/vault-entry</code></td></tr>
+      <tr><th>Account</th><td>Create account (Google, Apple, email) · Email in 3 steps · Sign in · Reset password (sheet) · Terms, Privacy (sheets)</td><td><code>#/account</code> <code>#/signin</code></td></tr>
+      <tr><th>Home</th><td>One screen, state-aware: main card, shortcuts, one recommendation</td><td><code>#/home</code></td></tr>
+      <tr><th>Will</th><td>Will tab (4 states) · Wizard: 6 chapters, 12 sections · Chapter saved · Review by chapter · Submitted · Status · View my Will / print</td><td><code>#/will</code> <code>#/will/c/…</code> <code>#/will/view</code></td></tr>
+      <tr><th>Signing</th><td>Choose a route · Sign at home · Notarized Attestation (leads to checkout)</td><td><code>#/sign</code></td></tr>
+      <tr><th>Vault</th><td>Discovery (not subscribed) · Dashboard (active) · 4 module lists with filters · Add / view item (sheets)</td><td><code>#/vault</code> <code>#/vault/…</code></td></tr>
+      <tr><th>Checkout</th><td>One checkout for any paid service · Compact confirmation</td><td><code>#/pay/…</code> <code>#/paid/…</code></td></tr>
+      <tr><th>Profile</th><td>Account · Your plan · People with access · Help · Terms · Sign out</td><td><code>#/profile</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>Bottom navigation: Home · Will · Vault · Profile. It shows on the four tab screens only; the wizard, checkout and signing are focused screens with Back.</p>
+
+  <h2 id="b">B. End-to-end flow</h2>
+  <h3>Free Will entry</h3>
+  <p class="flow">Campaign → Value journey (problem 1, problem 2, the fix, Vault as optional, free Will) → Create account → Will wizard, chapter 1 → … → Review by chapter → Submit → Scholar Review → Legal Review → Ready to Sign → Sign at home (free) or Notarized (checkout) → Completed → Home, with one Vault discovery banner</p>
+  <h3>Vault entry</h3>
+  <p class="flow">Campaign → Vault discovery → Create account → Checkout → Vault dashboard → Home, with “Create your Islamic Will for free” as the one recommendation</p>
+  <h3>Direct entry</h3>
+  <p class="flow">Product tour (4 screens, skippable) → Create account → Home, Will not started</p>
+  <ul>
+    <li>No plan picker and no “Will or Vault?” question anywhere. The entry decides.</li>
+    <li>Funnel visitors skip the tour: they have just seen the same message.</li>
+    <li>No payment screen before a paid service is chosen.</li>
+    <li>“Save and go Home” is on every wizard screen. Answers save on every keystroke, and Continue on Home returns to the same section.</li>
+  </ul>
+
+  <h2 id="c">C. Screen inventory</h2>
+  <h3>Existing canvas (81 artboards)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Canvas screens</th><th>Decision</th><th>Why, and what replaces it</th></tr></thead>
+    <tbody>
+      <tr><td>Package selection: Main, Mobile, Current, v2, v2b, v3 Olive / Teal / Aubergine, Original Individual / Family (15)</td><td><span class="tag rm">Remove</span></td><td>Forced plan choice before the Will. Replaced by: free Will by default, Vault offered on its own tab, Notarized offered at signing.</td></tr>
+      <tr><td>Payment: Current, v2 desktop, v2 mobile (3)</td><td><span class="tag mod">Modify</span></td><td>One checkout, reached only from Vault or Notarized. Price comes from config.</td></tr>
+      <tr><td>Confirmation: Success, Current, v2 desktop, v2 mobile (4)</td><td><span class="tag mod">Modify</span></td><td>Compact: one line of status, one next action, Back to Home.</td></tr>
+      <tr><td>v2 Terracotta palette sheet (1)</td><td><span class="tag mod">Modify</span></td><td>Terracotta <code>#c4623a</code> reads as a warning. Progress, selection and pending now use gold and amber; red is for errors and Remove only.</td></tr>
+      <tr><td>Vault dashboard: Current, Enhanced desktop / mobile, Handover 1 desktop / mobile (5)</td><td><span class="tag merge">Merge</span> <span class="tag mod">Modify</span></td><td>Enhanced and Handover 1 are the same screen. Kept as one active dashboard: product language, four figures, no selling.</td></tr>
+      <tr><td>Vault sections and Add forms: 8 current screenshots, Manual Inventory, Manual Add asset, Handover 3–6 (26)</td><td><span class="tag mod">Modify</span></td><td>Same lists. Filter chips at 44px with horizontal scroll; Add opens as a bottom sheet on phones. The prototype uses a short form (name, type, amount); the full field sets on the canvas stay.</td></tr>
+      <tr><td>Vault guided wizard: VaultX and Handover 2, desktop / mobile (4)</td><td><span class="tag keep">Keep</span></td><td>Still the guided way to fill the Vault. Not rebuilt in this prototype.</td></tr>
+      <tr><td>Trusted People: Handover 7 (2)</td><td><span class="tag merge">Merge</span></td><td>Executors come from the Will, so they are not entered twice. Recipients become “People with access” in Profile, invited from one sheet.</td></tr>
+      <tr><td>Reminders, Release settings, Export &amp; close: Handover 8–10 (6)</td><td><span class="tag keep">Keep</span></td><td>Settings reached from Profile. Not rebuilt in this prototype.</td></tr>
+      <tr><td>Recipient and executor screens: Handover 11–14 (11)</td><td><span class="tag keep">Keep</span></td><td>A different user (the family, later). Outside this journey.</td></tr>
+      <tr><td>Staff screens: Handover 15–18 (4)</td><td><span class="tag keep">Keep</span></td><td>Internal tools. Review stages shown to clients must match the staff queue.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>New in the prototype</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Screen</th><th>Decision</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Value journey, 6 steps</td><td><span class="tag new">New</span></td><td>One component, six data rows. No questions asked.</td></tr>
+      <tr><td>Product tour, 4 steps</td><td><span class="tag new">New</span></td><td>Same component as the journey. Direct entry only.</td></tr>
+      <tr><td>Create account, Sign in</td><td><span class="tag new">New</span></td><td>One account screen. Email path asks name, email, password, one per step. Terms and Privacy open as sheets.</td></tr>
+      <tr><td>Will wizard</td><td><span class="tag new">New</span></td><td>One screen template for all 12 sections. Light tinted header.</td></tr>
+      <tr><td>Chapter saved</td><td><span class="tag new">New</span></td><td>Compact. Shown once per chapter.</td></tr>
+      <tr><td>Review by chapter / View my Will</td><td><span class="tag new">New</span></td><td>One accordion list, used for review, viewing and print.</td></tr>
+      <tr><td>Home</td><td><span class="tag new">New</span></td><td>One screen, nine states.</td></tr>
+      <tr><td>Will tab and status</td><td><span class="tag new">New</span></td><td>Chapter list while writing; status and timeline after submission.</td></tr>
+      <tr><td>Signing options, Sign at home</td><td><span class="tag new">New</span></td><td>Two cards that look different: white “Included”, navy “Paid service”.</td></tr>
+      <tr><td>Vault discovery</td><td><span class="tag new">New</span></td><td>Used for the Vault entry and for the Vault tab when not subscribed.</td></tr>
+      <tr><td>Profile</td><td><span class="tag new">New</span></td><td>Plan, people with access, help, legal.</td></tr>
+      <tr><td>Sheets: help, terms, submit, reviewer question, invite, add item, item details, reset password</td><td><span class="tag new">New</span></td><td>Used instead of extra screens.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="d">D. CTA and navigation map</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Screen</th><th>CTA</th><th>Goes to</th><th>Needs</th><th>Payment</th><th>Back</th></tr></thead>
+    <tbody>
+      <tr><td>Value journey 1–5</td><td>Show me / Next · Skip</td><td>Next step · last step</td><td>—</td><td>No</td><td>Previous step</td></tr>
+      <tr><td>Value journey 6</td><td>Create my Will · Sign in</td><td>Create account · Sign in</td><td>—</td><td>No</td><td>Step 5</td></tr>
+      <tr><td>Create account</td><td>Google · Apple · Continue with email</td><td>Free Will entry: wizard, chapter 1. Vault entry: checkout. Direct: Home</td><td>—</td><td>No</td><td>Where they came from</td></tr>
+      <tr><td>Email steps</td><td>Continue · Create account</td><td>Next step · same as above</td><td>Name, email, password (8+)</td><td>No</td><td>Previous step</td></tr>
+      <tr><td>Sign in</td><td>Sign in · Forgot password? · Create an account</td><td>Home · reset sheet · entry start</td><td>Email, password</td><td>No</td><td>Entry start</td></tr>
+      <tr><td>Wizard section</td><td>Continue · Save and go Home · Get help</td><td>Next section, or Chapter saved · Home · help sheet</td><td>Valid section</td><td>No</td><td>Previous section, previous chapter, or Will tab</td></tr>
+      <tr><td>Chapter saved</td><td>Continue to [next] · Back to Home</td><td>Next chapter · Home</td><td>—</td><td>No</td><td>—</td></tr>
+      <tr><td>Review</td><td>Edit · Submit my Will · Save and go Home</td><td>That section, then back to Review · confirm sheet · Home</td><td>All six parts done</td><td>No</td><td>Witness 2</td></tr>
+      <tr><td>Submitted</td><td>Back to Home · View and print my Will</td><td>Home · View my Will</td><td>—</td><td>No</td><td>—</td></tr>
+      <tr><td>Home</td><td>Main card CTA · shortcuts · one banner CTA</td><td>See the Home matrix</td><td>State</td><td>No</td><td>—</td></tr>
+      <tr><td>Will tab, in review</td><td>Answer question (only if asked) · View my Will</td><td>Question sheet · View my Will</td><td>—</td><td>No</td><td>—</td></tr>
+      <tr><td>Signing options</td><td>Sign at home · Choose Notarized</td><td>Sign at home steps · checkout</td><td>Ready to Sign</td><td>Only Notarized</td><td>Home</td></tr>
+      <tr><td>Sign at home</td><td>Print my Will · I’ve signed my Will</td><td>View my Will · confirm sheet, then Home (Completed)</td><td>—</td><td>No</td><td>Signing options</td></tr>
+      <tr><td>Vault discovery</td><td>Start My Vault</td><td>Signed in: checkout. Not signed in: Create account</td><td>—</td><td>Yes, next screen</td><td>Tab bar / none</td></tr>
+      <tr><td>Checkout</td><td>Pay</td><td>Confirmation</td><td>Card</td><td>Yes</td><td>Vault or Signing options</td></tr>
+      <tr><td>Confirmation</td><td>Open My Vault / Back to Home</td><td>Vault dashboard / Home</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Vault module</td><td>Add [item] · row · filter</td><td>Add sheet · item sheet (Remove) · filtered list</td><td>Active Vault</td><td>No</td><td>My Vault</td></tr>
+      <tr><td>Profile</td><td>My Vault · Invite family · Get help · Terms · Privacy · Sign out</td><td>Vault tab · invite sheet · sheets · Sign in</td><td>—</td><td>No</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p>No CTA is decorative: each has a destination. The automated walk-through clicked the main path and the sheets; Print and the reset-link email were not exercised.</p>
+
+  <h2 id="e">E. User-state matrix</h2>
+  <div class="tw"><table>
+    <thead><tr><th>State</th><th>Home shows</th><th>Will tab</th><th>Vault tab</th><th>Next action</th></tr></thead>
+    <tbody>
+      <tr><th>Visitor, free Will funnel</th><td>—</td><td>—</td><td>—</td><td>Create my Will</td></tr>
+      <tr><th>Visitor, Vault entry</th><td>—</td><td>—</td><td>—</td><td>Start My Vault</td></tr>
+      <tr><th>Will not started</th><td>Create your Islamic Will for free</td><td>Start card</td><td>Discovery</td><td>Start my Will</td></tr>
+      <tr><th>Will in progress</th><td>Continue your Will</td><td>Chapter list</td><td>Discovery</td><td>Continue</td></tr>
+      <tr><th>Submitted / Scholar / Legal</th><td>Your Will is under review</td><td>Status and timeline</td><td>Discovery</td><td>None, unless a reviewer asks</td></tr>
+      <tr><th>Review, action needed</th><td>A reviewer has a question</td><td>Same card</td><td>Discovery</td><td>Answer question</td></tr>
+      <tr><th>Ready to Sign</th><td>Your Will is ready to sign</td><td>Same card</td><td>Discovery</td><td>Continue to signing</td></tr>
+      <tr><th>Attestation (Notarized)</th><td>Your attestation is being arranged</td><td>Status and timeline</td><td>Discovery</td><td>None</td></tr>
+      <tr><th>Completed, Will only</th><td>Your Islamic Will is ready + Will shortcuts</td><td>View my Will + shortcuts</td><td>Discovery</td><td>View my Will</td></tr>
+      <tr><th>Completed, Will + Vault</th><td>Your Islamic Will is ready + Vault shortcuts</td><td>View my Will + shortcuts</td><td>Dashboard</td><td>One recommendation</td></tr>
+      <tr><th>Vault only</th><td>My Vault card + Vault shortcuts</td><td>Start card</td><td>Dashboard</td><td>Open My Vault</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="f">F. Home state matrix</h2>
+  <div class="tw"><table>
+    <thead><tr><th>State</th><th>Main card</th><th>Chip</th><th>CTA</th><th>Shortcuts</th><th>Banner (never more than one)</th></tr></thead>
+    <tbody>
+      <tr><th>Not started</th><td>Create your Islamic Will for free</td><td>—</td><td>Start my Will</td><td>—</td><td>—</td></tr>
+      <tr><th>In progress</th><td>Continue your Will · chapter · bar · next section</td><td>In progress (gold)</td><td>Continue</td><td>Vault, if owned</td><td>—</td></tr>
+      <tr><th>Under review</th><td>Your Will is under review.</td><td>Stage name (gold)</td><td>Text link: See review status</td><td>Vault, if owned</td><td>Vault discovery, or next Vault step</td></tr>
+      <tr><th>Action needed</th><td>A reviewer has a question</td><td>Action needed (amber)</td><td>Answer question</td><td>Vault, if owned</td><td>—</td></tr>
+      <tr><th>Ready to Sign</th><td>Your Will is ready to sign.</td><td>Ready to Sign (gold)</td><td>Continue to signing</td><td>Vault, if owned</td><td>—</td></tr>
+      <tr><th>Completed, no Vault</th><td>Your Islamic Will is ready.</td><td>Completed (green)</td><td>View my Will</td><td>Beneficiaries · Guardians · Documents · Update details</td><td>“There’s more you can keep protected.” → See how it works</td></tr>
+      <tr><th>Completed, Vault active</th><td>Your Islamic Will is ready.</td><td>Completed (green)</td><td>View my Will</td><td>Obligations · Assets · Sealed · Final Words</td><td>First that applies: Add your assets → Invite family → Review your plan → nothing</td></tr>
+      <tr><th>Vault only</th><td>My Vault</td><td>Sections started / Up to date</td><td>Open My Vault</td><td>Vault modules</td><td>Create your Islamic Will for free.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Priority order, as built</h3>
+  <ol>
+    <li>Required action (a reviewer’s question): takes the main card, no banner.</li>
+    <li>Continue the Will: no banner.</li>
+    <li>Review status or signing in the main card. Signing shows no banner.</li>
+    <li>Missing critical information: “Add your assets.”</li>
+    <li>Family access: “Keep your family in the loop.”</li>
+    <li>Vault discovery, only if the Vault is not owned and the Will is submitted or complete.</li>
+    <li>A relevant add-on: for Vault-only users, the free Will.</li>
+    <li>Maintenance: “Review your plan.”</li>
+  </ol>
+
+  <h2 id="g">G. Vault state matrix</h2>
+  <div class="tw"><table>
+    <thead><tr><th>State</th><th>Vault tab</th><th>Home</th><th>Selling shown</th></tr></thead>
+    <tbody>
+      <tr><th>Not subscribed</th><td>Discovery: navy header, four modules, price from config, Start My Vault</td><td>One discovery banner, only after the Will is submitted</td><td>Yes, in these two places only</td></tr>
+      <tr><th>Active, empty</th><td>Dashboard. Chip “0 of 4 sections started”. Every module “Not started”</td><td>Vault shortcuts + “Add your assets.”</td><td>None</td></tr>
+      <tr><th>Active, incomplete</th><td>Chip “2 of 4 sections started”. Figures filled in</td><td>Vault shortcuts + next step</td><td>None</td></tr>
+      <tr><th>Active, healthy</th><td>Chip “Up to date” (green) and “Reviewed today”</td><td>Vault shortcuts, no banner</td><td>None</td></tr>
+    </tbody>
+  </table></div>
+  <p>Every Vault screen uses one header component: the same navy, the same gold, the same arch motif.</p>
+
+  <h2 id="h">H. Payment logic</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Product</th><th>Price</th><th>Payment appears</th><th>Never</th></tr></thead>
+    <tbody>
+      <tr><th>Basic Islamic Will</th><td>Free. No card.</td><td>Never</td><td>No card is asked for “just in case”.</td></tr>
+      <tr><th>My Vault</th><td><code>pricing.vault</code>. Sample value: $7.99 CAD / month</td><td>After “Start My Vault”</td><td>Not after account creation, not inside the Will.</td></tr>
+      <tr><th>Notarized Attestation</th><td><code>pricing.notary</code>. Not set: the card reads “Price confirmed at checkout”</td><td>After “Choose Notarized”, and only when the Will is Ready to Sign</td><td>Not shown before signing.</td></tr>
+      <tr><th>Future add-ons</th><td>New entry in <code>pricing</code></td><td>After the user chooses it</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p>Checkout is one screen that takes the product as a parameter. It cannot be reached for a product the user already owns, or for Notarized before the Will is ready.</p>
+
+  <h2 id="i">I. Progress and status logic</h2>
+  <ul>
+    <li><b>Two levels, never mixed.</b> The line “Chapter 2 of 6 · Family” is chapter progress. The segments under it are sections of that chapter and are labelled “Section 1 of 3”. A chapter with one section shows no segments.</li>
+    <li><b>Chapters are data.</b> Order and sections come from <code>chapters</code> in config. The Guardian section appears only when a child under 18 was added.</li>
+    <li><b>Stages are data.</b> Submitted → Scholar Review → Legal Review → Ready to Sign → Attestation (Notarized route only) → Completed.</li>
+    <li><b>Each review stage answers three things:</b> what is happening now, whether anything is needed from the user, what comes next.</li>
+  </ul>
+  <div class="tw"><table>
+    <thead><tr><th>Colour</th><th>Used for</th><th>Always paired with</th></tr></thead>
+    <tbody>
+      <tr><th>Navy</th><td>Primary buttons, the selected option, the current section, Vault header</td><td>Label</td></tr>
+      <tr><th>Gold / beige</th><td>Progress bars, completed sections, “In progress”, review stages, “Ready to Sign”</td><td>Chip text and icon</td></tr>
+      <tr><th>Amber</th><td>“Action needed”, “To do”</td><td>Chip text and alert icon</td></tr>
+      <tr><th>Green</th><td>Completed, Active, Free, Included, Up to date</td><td>Chip text and check icon</td></tr>
+      <tr><th>Grey</th><td>Not started, disabled</td><td>“Not started” text</td></tr>
+      <tr><th>Red</th><td>Field errors and Remove. Nothing else.</td><td>Message and icon</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="j">J. UX writing</h2>
+  <p>Rule used throughout: a headline of 3–8 words, one short supporting sentence, a button that names the action. Nothing is said twice on a screen.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Place</th><th>Headline</th><th>Support</th><th>Button</th></tr></thead>
+    <tbody>
+      <tr><td>Journey 1</td><td>Will your family inherit the way you intend?</td><td>Two things often go wrong. See them in a minute.</td><td>Show me</td></tr>
+      <tr><td>Journey 2</td><td>The wrong shares</td><td>Without a Will, provincial law divides your estate. Those shares can differ from Islamic inheritance.</td><td>Next</td></tr>
+      <tr><td>Journey 3</td><td>An estate no one can find</td><td>Accounts, debts and documents get missed when no one knows where they are.</td><td>Next</td></tr>
+      <tr><td>Journey 4</td><td>An Islamic Will sets it out</td><td>Answer guided questions. We structure your wishes and inheritance instructions.</td><td>Next</td></tr>
+      <tr><td>Journey 5</td><td>My Vault keeps it findable</td><td>Optional. One secure place for the details your family will need.</td><td>Next</td></tr>
+      <tr><td>Journey 6</td><td>Create your Islamic Will for free</td><td>About 30 minutes. Stop and return anytime.</td><td>Create my Will</td></tr>
+      <tr><td>Tour 1–4</td><td>Your estate plan, connected. · Guided, one step at a time. · Important details, kept safe. · Start with what matters now.</td><td>One line each</td><td>Next / Get started</td></tr>
+      <tr><td>Account</td><td>Save your Will as you go</td><td>Free. No card needed.</td><td>Continue with email</td></tr>
+      <tr><td>Chapter saved</td><td>About You saved</td><td>1 of 6 chapters complete</td><td>Continue to Family</td></tr>
+      <tr><td>Home, review</td><td>Your Will is under review.</td><td>A scholar is reviewing your Will. Nothing is needed from you.</td><td>—</td></tr>
+      <tr><td>Home, ready</td><td>Your Will is ready to sign.</td><td>Choose how you’d like to sign.</td><td>Continue to signing</td></tr>
+      <tr><td>Home, complete</td><td>Your Islamic Will is ready.</td><td>View or review your Will anytime.</td><td>View my Will</td></tr>
+      <tr><td>Vault banner</td><td>There’s more you can keep protected.</td><td>See what My Vault can help you organize.</td><td>See how it works</td></tr>
+      <tr><td>Vault discovery</td><td>Keep the rest of your estate organized.</td><td>Store important details your family may need later — in one secure place.</td><td>Start My Vault</td></tr>
+      <tr><td>Vault active</td><td>Everything important, in one secure place.</td><td>—</td><td>—</td></tr>
+      <tr><td>Errors</td><td colspan="3">Say what to do: “Enter a 10-digit Canadian number, like 416 555 0123.” · “Witnesses must be 18 or older.” · “A witness can’t also inherit under this Will. Choose someone else.”</td></tr>
+    </tbody>
+  </table></div>
+  <p>“Free” appears where it removes a doubt: the last journey step, the account screen, the not-started card, and the plan row in Profile. It is not repeated elsewhere.</p>
+
+  <h2 id="k">K. Final QA</h2>
+  <p>An automated walk-through ran the whole prototype at 390 × 844: funnel, account, every chapter, submission, each review stage, both signing routes, Vault purchase, adding an asset, inviting family, the other two entries and seven presets. It reported no script errors and every check below passed.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Free Will flow: funnel ends on account, account leads straight into chapter 1</td><td>Pass</td></tr>
+      <tr><td>No price or card field before a paid service is chosen</td><td>Pass</td></tr>
+      <tr><td>Checkout reached only from Start My Vault and Choose Notarized</td><td>Pass</td></tr>
+      <tr><td>Phone: a non-Canadian number is rejected with a calm message</td><td>Pass</td></tr>
+      <tr><td>Witness under 18 blocked by age, not by a fixed year; a beneficiary cannot be a witness</td><td>Pass</td></tr>
+      <tr><td>Spouse offered as executor; “Same as executor” offered for guardian</td><td>Pass</td></tr>
+      <tr><td>Wasiyyah: 5% used, 28.3% available; Split equally disappears when nothing is left</td><td>Pass</td></tr>
+      <tr><td>Leave from the wizard, reload the page, resume at the same section</td><td>Pass</td></tr>
+      <tr><td>Home: in progress shows no Vault promotion; review shows exactly one banner; ready shows signing only</td><td>Pass</td></tr>
+      <tr><td>Vault tab without a subscription opens discovery, never an empty dashboard</td><td>Pass</td></tr>
+      <tr><td>Active Vault shows no selling; Home swaps the upsell for the next useful step</td><td>Pass</td></tr>
+      <tr><td>No red or burgundy on a screen without an error</td><td>Pass</td></tr>
+      <tr><td>Every link and button on Home at least 44px tall</td><td>Pass</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Not done, or not checked</h3>
+  <ul>
+    <li><b>Desktop.</b> This prototype is the phone version. The desktop product is a separate build: <a href="../desktop/index.html">desktop prototype</a>.</li>
+    <li><b>Contrast.</b> Colours come from the canvas and were chosen to pass; they were not measured with a tool on every screen.</li>
+    <li><b>Tap targets.</b> Measured on Home only.</li>
+    <li><b>Kept but not rebuilt.</b> The Vault guided wizard, the full Add forms, Reminders, Release settings, Export, and the recipient, executor and staff screens.</li>
+    <li><b>Mocked.</b> Google and Apple sign-in, card payment, emails to witnesses and family, and the reviewer’s question. No real service is called and no password is stored.</li>
+    <li><b>Placeholders.</b> Terms and Privacy text, the support contact, the notarized price, and the reviewer’s question are marked in [brackets].</li>
+    <li><b>Illustrative only.</b> The “wrong shares” bars show no real percentages; real ones need a scholar-approved example.</li>
+  </ul>
+</main>
+</body>
+</html>

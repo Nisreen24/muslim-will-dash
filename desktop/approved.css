@@ -1,0 +1,262 @@
+/* =====================================================================================================
+   MUSLIM WILL — APPROVED DESIGN LANGUAGE FOR DESKTOP
+   Source of truth: the approved mobile prototype (simulator v41). This file is loaded last.
+   It holds the design tokens and the shared components; desktop.css keeps the layout.
+   Rule: preserve the brand, change the composition. Nothing here is a phone layout.
+
+   1 Tokens · 2 Type · 3 Buttons · 4 Inputs and labels · 5 Cards, stats, empty states · 6 Status
+   7 Navigation · 8 Progress · 9 Will header · 10 Vault header · 11 Banners · 12 Responsive
+   ===================================================================================================== */
+
+/* ---------- 1 · Tokens ---------- */
+:root {
+  /* Colour: parchment 60 / ink navy 30 / gold accent. Burgundy is errors and destructive actions only. */
+  --mw-page: #F3EEE5;            /* warm parchment — the environment */
+  --mw-surface: #FBF8F3;         /* cards, sidebar, top bar */
+  --mw-field: #FFFFFF;           /* inputs sit one step lighter than their surface */
+  --mw-sunken: #EAE4DA;          /* tracks, current nav item, neutral chips */
+  --mw-ink: #172033;             /* text, primary button */
+  --mw-ink-2: #2B3448;           /* primary button hover */
+  --mw-text: #4F5854;            /* body */
+  --mw-muted: #6E6A66;           /* captions, section labels */
+  --mw-line: #E7E1D8;            /* hairlines and card borders */
+  --mw-line-strong: #D8D0C3;     /* input borders */
+  --mw-gold: #C8A45C;            /* accent: progress, glyphs on navy, eyebrow on navy */
+  --mw-gold-text: #7A5B1E;       /* gold as text on light surfaces (AA) */
+  --mw-gold-tint: #FBF4E8;       /* icon tiles, soft highlights */
+  --mw-gold-line: #EBD3A6;
+  --mw-will-tint: #EFE3CC;       /* the Will header */
+  --mw-vault: linear-gradient(118deg, #10233F 0%, #132B4D 58%, #17345C 100%);   /* the Vault header */
+  --mw-success: #1F5A33; --mw-success-soft: #E4EFE6;
+  --mw-error: #7A263A; --mw-error-soft: #F0E1E3;
+  --mw-note: #F3F4F7; --mw-note-line: #E6E8EE; --mw-note-text: #4A5468;         /* the quiet security note */
+
+  /* Type */
+  --mw-serif: 'DM Serif Display', Georgia, serif;      /* editorial moments only */
+  --mw-sans: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --mw-title: clamp(28px, 19px + .82vw, 38px);         /* working page title, Manrope 800 */
+  --mw-display: clamp(34px, 21px + 1.3vw, 52px);       /* editorial heading, DM Serif */
+  --mw-h2: clamp(21px, 18px + .3vw, 25px);
+  --mw-label: 13px;
+
+  /* Shape, space, elevation */
+  --mw-r-card: 20px; --mw-r-band: 24px; --mw-r-tile: 16px; --mw-r-pill: 999px;
+  --mw-shadow: 0 1px 2px rgba(23, 32, 51, .04), 0 4px 14px -8px rgba(23, 32, 51, .08);
+  --mw-shadow-float: 0 8px 24px rgba(23, 32, 51, .14);
+
+  /* Map the older variable names onto the approved values, so every existing rule follows. */
+  --page: var(--mw-page); --card: var(--mw-surface); --parch: var(--mw-surface); --sunken: var(--mw-sunken);
+  --navy: var(--mw-ink); --gold: var(--mw-gold); --gold-text: var(--mw-gold-text);
+  --muted: #5F6864; --line: var(--mw-line); --sh-card: var(--mw-shadow); --vnavy: var(--mw-vault);
+}
+body { background: var(--mw-page); }
+.pub, .auth { background: var(--mw-page); }
+.auth-r { background: var(--mw-surface); }
+.aside-note { background: var(--mw-surface); border-color: var(--mw-line); }
+
+/* ---------- 2 · Type: DM Serif for editorial headings, Manrope for everything that is worked with ---------- */
+.dsk .h1 { font: 800 var(--mw-title)/1.14 var(--mw-sans); letter-spacing: -.022em; }
+.dsk .h2, .sheet .h2 { font: 800 var(--mw-h2)/1.22 var(--mw-sans); letter-spacing: -.015em; }
+.dsk .h3 { letter-spacing: -.01em; }
+/* Editorial: the greeting, the one status headline, the recommendation, sign-in and the product story. */
+.dsk .pg-h .eyebrow + .h1, .dsk .card.hero .h1, .dsk .duo .txt .h1, .dsk .auth-l .h1, .dsk .formcol .h1, .dsk .vband .h1 { font: 400 var(--mw-display)/1.1 var(--mw-serif); letter-spacing: -.005em; }
+.dsk .card.hero .h2, .dsk .rec .h2, .dsk .band .h2 { font: 400 clamp(27px, 20px + .7vw, 36px)/1.15 var(--mw-serif); letter-spacing: 0; }
+.dsk .formcol .h1 { font-size: clamp(32px, 22px + .9vw, 44px); }
+.eyebrow { font-size: 13px; letter-spacing: .16em; color: var(--mw-gold-text); }
+.panel-t, .sec { font: 700 13px/1.3 var(--mw-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--mw-muted); }
+.sec { margin: 6px 4px -6px; }
+/* Figures are Manrope, tabular — never serif */
+.statc b, .totals b.big, .pkg-price, .session b, .ring b, .stat b { font-family: var(--mw-sans); font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+
+/* ---------- 3 · Buttons: navy pill primary, light outlined secondary, arrow where it moves you forward ---------- */
+.btn.navy { background: var(--mw-ink); }
+.btn.navy:hover { background: var(--mw-ink-2); }
+.btn.out { background: var(--mw-surface); border: 1px solid #CBC3B6; }
+.btn.out:hover { background: #fff; border-color: var(--mw-ink); }
+.btn.gold { background: var(--mw-surface); color: var(--mw-ink); }             /* on navy, the action is a light pill; gold stays an accent */
+.btn.gold:hover { background: #fff; }
+.btn.gold svg { color: var(--mw-gold-text); }
+.btn.ondark { border: 1px solid rgba(227, 205, 159, .7); }
+.btn[disabled] { background: #CFC9BE; color: #F3EEE5; }
+@media (prefers-reduced-motion: no-preference) { .btn { transition: background .15s ease, border-color .15s ease, transform .12s ease; } .btn:active { transform: translateY(1px); } }
+
+/* ---------- 4 · Inputs and labels ---------- */
+.dsk .input, .sheet .input { background-color: var(--mw-field); border: 1px solid var(--mw-line-strong); }
+.dsk .input:hover, .sheet .input:hover { border-color: #BDB4A6; }
+.dsk .input:focus, .sheet .input:focus { border-color: var(--mw-ink); outline: 3px solid rgba(23, 32, 51, .16); outline-offset: 0; }
+.dsk .input.bad, .sheet .input.bad { border-color: var(--mw-error); background-color: #FDF8F8; }
+.dsk .input::placeholder, .sheet .input::placeholder { color: #868C93; font-weight: 500; }
+/* A label that names one field: small, uppercase, quiet. A question over a group of choices stays a sentence. */
+label.field > .label, .field > .row > .label { font: 700 var(--mw-label)/1.3 var(--mw-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--mw-text); }
+label.field > .label i { font: 500 var(--mw-label)/1.3 var(--mw-sans); letter-spacing: 0; text-transform: lowercase; color: var(--mw-muted); margin-left: 8px; }
+.field > .label, legend.label, .group > .label { font: 700 16.5px/1.3 var(--mw-sans); letter-spacing: -.01em; color: var(--mw-ink); }
+.hint { color: var(--mw-muted); }
+.opt { border: 1px solid var(--mw-line); background: var(--mw-surface); }
+.wbody .opt, .card .opt, .sheet .opt { background: #fff; }
+.opt:hover { border-color: #BDB4A6; }
+.opt.on { border-color: var(--mw-ink); background: #FFFDF8; box-shadow: inset 0 0 0 1px var(--mw-ink); }
+.enc { display: inline-flex; align-items: center; gap: 9px; align-self: flex-start; padding: 8px 14px; border-radius: 12px; background: var(--mw-note); border: 1px solid var(--mw-note-line); color: var(--mw-note-text); font: 500 14.5px/1.35 var(--mw-sans); }
+.enc svg { color: var(--mw-ink); }
+
+/* ---------- 5 · Cards, stat cards, rows, empty states ---------- */
+.card, .tbl, .list, .tile { border-color: var(--mw-line); box-shadow: var(--mw-shadow); }
+.card.tint { background: linear-gradient(135deg, #FBF4E8 0%, #F6EAD6 100%); border-color: #EBDDC3; }
+.ico { background: var(--mw-gold-tint); color: var(--mw-gold-text); border-radius: 13px; }
+.ico.navy { background: var(--mw-ink); color: var(--mw-gold); border-radius: var(--mw-r-tile); }
+.ico.green { background: var(--mw-success-soft); color: var(--mw-success); }
+.dsk .tile .ico { width: 44px; height: 44px; }
+.vstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: clamp(12px, 1vw, 18px); }
+.vstat { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 18px 20px 16px; background: var(--mw-surface); border: 1px solid var(--mw-line); border-radius: 18px; box-shadow: var(--mw-shadow); }
+.vstat .panel-t { display: flex; align-items: center; gap: 9px; min-height: 28px; }
+.vstat .panel-t i { width: 28px; height: 28px; border-radius: 9px; background: var(--mw-gold-tint); color: #8A6A2C; display: grid; place-items: center; flex: none; }
+.vstat b { font: 800 clamp(24px, 19px + .45vw, 30px)/1.15 var(--mw-sans); letter-spacing: -.02em; color: var(--mw-ink); font-variant-numeric: tabular-nums; }
+.vstat b small { font: 600 14px/1 var(--mw-sans); letter-spacing: 0; color: var(--mw-muted); margin-right: 6px; }
+.vstat .small { font-size: 14.5px; color: var(--mw-muted); }
+.pkg-price { font-size: clamp(24px, 19px + .45vw, 30px); }
+.modlink .ico.navy { width: 56px; height: 56px; }
+.modlink .cnt { font-weight: 700; color: var(--mw-gold-text); white-space: nowrap; }
+.modlink:hover, .setlink:hover, .dsk .tile:hover { border-color: #BDB4A6; }
+.setlink { border-color: var(--mw-line); }
+.vrow .amt { font-weight: 800; letter-spacing: -.01em; }
+.card.empty { align-items: center; text-align: center; gap: 10px; padding: clamp(36px, 4vw, 56px) 24px; }
+.card.empty .ico { width: 60px; height: 60px; border-radius: 18px; border: 1px solid var(--mw-gold-line); margin-bottom: 6px; }
+.card.empty .p { max-width: 44ch; color: var(--mw-muted); }
+.card.empty .btn { align-self: center; margin-top: 10px; }
+
+/* ---------- 6 · Status: always a label with the colour ---------- */
+.chip { font-weight: 700; }
+.c-gold { background: #FBF1E1; color: var(--mw-gold-text); }
+.c-green { background: var(--mw-success-soft); color: var(--mw-success); }
+.err { color: var(--mw-error); }
+
+/* ---------- 7 · Navigation: the phone's floating light tab bar becomes a light sidebar ---------- */
+.side, .top { background: var(--mw-surface); }
+.side a.nv[aria-current] { background: var(--mw-sunken); }
+.seg a[aria-current], .vtabs a[aria-current] { box-shadow: 0 1px 2px rgba(23, 32, 51, .14); }
+.filters button { min-height: 42px; }
+.tabs-d a[aria-current] { border-bottom-color: var(--mw-gold); }
+
+/* ---------- 8 · Progress: gold is the step you are on, ink is what is done ---------- */
+.bar i { background: var(--mw-gold); }
+.wsegs { display: flex; align-items: center; gap: 8px; flex: 1; max-width: 460px; }
+.wsegs i { flex: 1; height: 4px; border-radius: 2px; background: rgba(23, 32, 51, .1); }
+.wsegs i.on { background: var(--mw-gold); }
+.wsegs i.done { background: var(--mw-ink); }
+.wsegs span { flex: none; margin-left: 8px; font: 600 14px/1 var(--mw-sans); color: var(--mw-muted); white-space: nowrap; }
+.steps li.on::before { background: var(--mw-gold); }
+.steps li.done::before { background: var(--mw-ink); }
+
+/* ---------- 9 · Will header: warm tint, never a navy block ---------- */
+.whead { background: var(--mw-will-tint); border: 0; border-radius: var(--mw-r-band) var(--mw-r-band) 0 0; gap: 12px; padding: clamp(22px, 1.8vw, 30px) clamp(24px, 2.2vw, 36px) clamp(24px, 2vw, 32px); }
+.whead > .row.between { margin-bottom: 8px; gap: 16px; }
+.whead .eyebrow { color: var(--mw-gold-text); }
+.whead .p { color: var(--mw-text); }
+.wbody { border-color: var(--mw-line); border-radius: 0 0 var(--mw-r-band) var(--mw-r-band); padding: clamp(24px, 2.2vw, 36px); }
+.wbody .acts { flex-wrap: nowrap; }
+.wbody .acts .btn.navy { min-width: 168px; }
+
+/* ---------- 10 · Vault header: one navy, one gold, one quiet motif — on every Vault page ---------- */
+.vhd { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; gap: 16px; padding: clamp(20px, 1.7vw, 28px) clamp(24px, 2.4vw, 40px) clamp(26px, 2.2vw, 36px); border-radius: var(--mw-r-band); background: var(--mw-vault); color: #E9E3D8; }
+.vhd::after { content: ''; position: absolute; z-index: -1; right: -30px; bottom: -120px; width: 330px; height: 330px; background: url('assets/arch-leaf.png') center / contain no-repeat; opacity: .11; filter: saturate(.5); pointer-events: none; }
+.vhd :focus-visible { outline-color: var(--mw-gold); }
+.vback { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 44px; padding: 0 18px 0 12px; border-radius: 999px; background: rgba(255, 255, 255, .12); color: #fff; font: 600 15px/1 var(--mw-sans); text-decoration: none; }
+.vback:hover { background: rgba(255, 255, 255, .2); }
+.vhd-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px 32px; flex-wrap: wrap; }
+.vhd .stack { gap: 8px; min-width: 0; }
+.vhd .eyebrow { color: var(--mw-gold); }
+.dsk .vhd .h1 { color: #fff; }
+.vhd .p { color: rgba(243, 238, 229, .78); max-width: 62ch; }
+.vhd .btn.navy { background: var(--mw-surface); color: var(--mw-ink); }
+.vhd .btn.navy:hover { background: #fff; }
+/* Vault landing: identity on the left, readiness on the right */
+.vhd.dash { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(24px, 3vw, 56px); padding-block: clamp(28px, 2.6vw, 44px); }
+.vhd.dash > .stack .h1 { font-size: clamp(32px, 20px + 1.1vw, 44px); }
+.vhd.dash > .stack .p { font-size: clamp(17px, 15px + .2vw, 19.5px); color: rgba(243, 238, 229, .92); }
+.vready { display: flex; align-items: center; gap: clamp(18px, 1.6vw, 28px); padding: clamp(18px, 1.5vw, 24px) clamp(20px, 1.7vw, 28px); border-radius: 20px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(200, 164, 92, .28); }
+.vready .stack { gap: 8px; }
+.dsk .vready .h3 { color: #fff; }
+.vready .p { font-size: 16px; }
+.vready .acts { margin-top: 6px; gap: 6px 18px; }
+.vready .ring { width: 116px; height: 116px; background: radial-gradient(closest-side, #172F55 80%, transparent 81%), conic-gradient(var(--mw-gold) calc(var(--p) * 1%), rgba(255, 255, 255, .14) 0); }
+.vready .ring b { font-size: 30px; color: #fff; }
+.vready .ring span { font-size: 13px; letter-spacing: .12em; }
+/* Vault add / edit forms and guided mode carry the same header */
+.whead.vn { background: var(--mw-vault); color: #E9E3D8; position: relative; isolation: isolate; overflow: hidden; }
+.whead.vn .eyebrow { color: var(--mw-gold); }
+.dsk .whead.vn .h1 { color: #fff; }
+.whead.vn .p { color: rgba(243, 238, 229, .78); }
+.whead.vn .termlink { color: #E3CD9F; }
+.card.gtop { background: var(--mw-vault); border: 0; color: #E9E3D8; }
+.gtop .eyebrow { color: var(--mw-gold); }
+.gtop .small.strong { color: #E9E3D8; }
+.gtop .bar { background: rgba(255, 255, 255, .14); }
+.gtop .grail a { color: rgba(243, 238, 229, .78); }
+.gtop .grail a:hover { background: rgba(255, 255, 255, .07); }
+.gtop .grail a .num { background: transparent; border-color: rgba(255, 255, 255, .34); color: #E9E3D8; }
+.gtop .grail a .num.ok { background: rgba(200, 164, 92, .22); border-color: transparent; color: #E3CD9F; }
+.gtop .grail a[aria-current] { background: rgba(255, 255, 255, .1); color: #fff; }
+.gtop .grail a[aria-current] .num { background: var(--mw-surface); border-color: var(--mw-surface); color: var(--mw-ink); }
+.gtop :focus-visible { outline-color: var(--mw-gold); }
+.vband .btn.gold { align-self: flex-start; }
+
+/* ---------- 11 · Banners: the recommendation is a light illustrated card ---------- */
+.rec { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; min-height: clamp(210px, 15vw, 260px); padding: clamp(26px, 2.4vw, 40px) clamp(26px, 2.6vw, 44px); border: 1px solid #EBDDC3; border-radius: var(--mw-r-band); background: #FDF3E7; box-shadow: var(--mw-shadow); }
+.rec::after { content: ''; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; aspect-ratio: 1672 / 941; max-width: 62%; background: var(--art) right center / cover no-repeat; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 34%); mask-image: linear-gradient(90deg, transparent 0, #000 34%); }
+.rec .stack { gap: 8px; max-width: min(56%, 620px); }
+.rec .eyebrow { letter-spacing: 0; text-transform: none; font-size: 15.5px; font-weight: 700; color: var(--mw-gold-text); }
+.rec .h2 { color: var(--mw-ink); }
+.rec .p { color: var(--mw-text); }
+.dsk .rec .btn { margin-top: 12px; min-width: 0; }
+.noteb .row svg { color: var(--mw-gold-text); }
+
+/* ---------- 12 · Responsive ---------- */
+.wbody .acts .btn { white-space: nowrap; }
+@media (max-width: 1279px) {
+  .vhd.dash { grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+  .vstats:has(> :nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }      /* four figures sit 2 × 2, never 3 + 1 */
+}
+@media (max-width: 1023px) {
+  .rec .stack { max-width: 66%; }
+  .rec::after { max-width: 52%; }
+  .vready { flex-wrap: wrap; }
+  .wbody .acts { flex-wrap: wrap; }
+}
+@media print { .vhd, .whead.vn, .card.gtop { background: none; color: inherit; } .vhd::after, .rec::after { display: none; } }
+
+
+/* =====================================================================================================
+   SIDE MENU — the approved deep navy, with a menu that opens under My Will and under My Vault.
+   The top bar stays light. Navy here is navigation, as the approved system allows.
+   ===================================================================================================== */
+.side { background: #172033; color: #E9E3D8; border-right: 0; }
+.side :focus-visible { outline-color: #C9A15B; }
+.side .brand { color: #FBF8F3; }
+.side a.nv { color: #E9E3D8; flex: none; }
+.grp a.nv { flex: 1; min-width: 0; }
+.side a.nv svg { color: #E3CD9F; }
+.side a.nv:hover { background: rgba(255,255,255,.08); }
+.side a.nv[aria-current] { background: rgba(201,161,91,.22); color: #fff; }
+.side a.nv .chip { background: rgba(201,161,91,.22); color: #E3CD9F; }
+.grp { display: flex; align-items: center; gap: 2px; }
+.gtog { width: 44px; height: 44px; flex: none; border-radius: 999px; color: #D5CFC4; display: flex; align-items: center; justify-content: center; }
+.gtog:hover { background: rgba(255,255,255,.1); color: #fff; }
+.sub { border-left-color: rgba(255,255,255,.18); }
+.sub[hidden] { display: none; }
+.sub a, .sub button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 4px 14px; border-radius: 999px; font-size: 15.5px; font-weight: 600; line-height: 1.25; color: #D5CFC4; text-decoration: none; text-align: left; }
+.sub a:hover, .sub button:hover { background: rgba(255,255,255,.08); color: #fff; }
+.sub a[aria-current] { background: rgba(255,255,255,.12); color: #fff; font-weight: 800; }
+.session { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.16); }
+.session b { color: #FBF8F3; }
+.session small { color: #D5CFC4; }
+.session button { background: transparent; border-color: rgba(255,255,255,.4); color: #fff; }
+.session button:hover { background: rgba(255,255,255,.1); }
+@media (max-width: 1023px) { .gtog, .side .sub { display: none; } .grp { justify-content: center; } .grp a.nv { flex: none; } }
+
+/* Side menu scrollbar: no visible track, a faint thumb that only shows while the pointer is over the menu. */
+.side { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.side:hover, .side:focus-within { scrollbar-color: rgba(255,255,255,.22) transparent; }
+.side::-webkit-scrollbar { width: 8px; }
+.side::-webkit-scrollbar-track, .side::-webkit-scrollbar-corner { background: transparent; }
+.side::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.side::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
+.side:hover::-webkit-scrollbar-thumb, .side:focus-within::-webkit-scrollbar-thumb { background: rgba(255,255,255,.22); }

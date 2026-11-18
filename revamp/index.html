@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Muslim Will — revamp prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="vault.css">
+</head>
+<body>
+<!-- Prototype controls. Not part of the product: they stand in for what the API would return. -->
+<button type="button" class="demo-toggle" id="demo-toggle">Prototype · change state</button>
+<div class="app" id="app"></div>
+<aside class="demo" id="demo" hidden aria-label="Prototype controls">
+  <button type="button" class="x" id="demo-x">Close</button>
+  <h2>Prototype states</h2>
+  <p>Not part of the product. Each button loads the state the API would return. <a href="plan.html" style="color:#d8c090">Open the plan</a></p>
+  <h3>Entry</h3>
+  <div class="set">
+    <button type="button" data-demo="e-will">Free Will funnel (new visitor)</button>
+    <button type="button" data-demo="e-vault">My Vault entry (new visitor)</button>
+    <button type="button" data-demo="e-direct">Direct sign-up (product tour)</button>
+  </div>
+  <h3>Will only</h3>
+  <div class="set">
+    <button type="button" data-demo="w-none">Not started</button>
+    <button type="button" data-demo="w-progress">In progress · early</button>
+    <button type="button" data-demo="w-late">In progress · near the end</button>
+    <button type="button" data-demo="w-scholar">Scholar Review</button>
+    <button type="button" data-demo="w-action">Scholar Review · action needed</button>
+    <button type="button" data-demo="w-legal">Legal Review</button>
+    <button type="button" data-demo="w-ready">Ready to Sign</button>
+    <button type="button" data-demo="w-complete">Completed · no Vault</button>
+  </div>
+  <h3>Will + Vault</h3>
+  <div class="set">
+    <button type="button" data-demo="v-empty">Vault active · empty</button>
+    <button type="button" data-demo="v-part">Vault active · needs action</button>
+    <button type="button" data-demo="v-healthy">Vault active · healthy</button>
+  </div>
+  <h3>Vault only</h3>
+  <div class="set"><button type="button" data-demo="v-only">Vault active · no Will</button></div>
+  <h3>Reviewer side</h3>
+  <div class="set"><button type="button" data-demo="next">Advance to the next review stage</button></div>
+</aside>
+
+<script>window.MW_DEFER = true;</script>
+<script src="config.js"></script>
+<script src="core.js"></script>
+<script src="flow.js"></script>
+<script src="wizard.js"></script>
+<script src="app.js"></script>
+<!-- My Vault: shared rules from the desktop build, then the phone screens -->
+<script src="../desktop/vault.js"></script>
+<script src="vault.js"></script>
+<script>render();</script>
+</body>
+</html>
