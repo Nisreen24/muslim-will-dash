@@ -57,6 +57,10 @@
 <!-- My Vault: shared rules from the desktop build, then the phone screens -->
 <script src="../desktop/vault.js"></script>
 <script src="vault.js"></script>
-<script>render();</script>
+<script>
+// Shareable links: index.html?demo=<state>#/route loads that prototype state once, then opens the route.
+(function () { var d = new URLSearchParams(location.search).get('demo'), h = location.hash; if (d && DEMO[d]) { DEMO[d](); history.replaceState(null, '', location.pathname + (h || location.hash)); } })();
+render();
+</script>
 </body>
 </html>
