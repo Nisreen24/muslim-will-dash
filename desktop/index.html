@@ -72,6 +72,10 @@
 <script src="vault.js"></script>
 <!-- Notarized Attestation: Document Upload and scheduling, from the live site. -->
 <script src="attest.js"></script>
-<script>render();</script>
+<script>
+// Shareable links: index.html?demo=<state>#/route loads that prototype state once, then opens the route.
+(function () { var d = new URLSearchParams(location.search).get('demo'), h = location.hash; if (d && DEMO[d]) { DEMO[d](); history.replaceState(null, '', location.pathname + (h || location.hash)); } })();
+render();
+</script>
 </body>
 </html>
