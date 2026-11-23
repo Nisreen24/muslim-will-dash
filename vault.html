@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Vault — Muslim Will</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/shell.css">
+<link rel="stylesheet" href="vault/vault.css">
+</head>
+<body>
+<a class="skip" href="#vault-root">Skip to content</a>
+<aside class="sidebar" id="sidebar" aria-label="Sidebar"></aside>
+<div class="main">
+  <header class="topbar" id="topbar"></header>
+  <main class="v-app" id="vault-root" tabindex="-1"></main>
+</div>
+<div id="dlg-root"></div>
+
+<!-- configuration → mock backend → state → shell → components → screens -->
+<script src="vault/config.js"></script>
+<script src="vault/mock-api.js"></script>
+<script src="vault/store.js"></script>
+<script src="shared/shell.js"></script>
+<script src="vault/components.js"></script>
+<script src="vault/app.js"></script>
+</body>
+</html>

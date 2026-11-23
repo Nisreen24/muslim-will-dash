@@ -46,6 +46,79 @@ function trusted() {
   return l;
 }
 function receives(name) { return S.vault.sealed.concat(S.vault.words).filter(function (x) { return (x.to || []).some(function (n) { return norm(n) === norm(name); }); }).length; }
+function today() { return new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' }); }
+// Executors are invited as soon as the Vault is active; recipients only when the owner chooses to tell them.
+function execInv() { var v = S.vault; if (!v.execInv && execName()) { v.execInv = { sent: today() }; save(); } return v.execInv || {}; }
+function execChip() { var e = execInv(); return e.accepted ? tag('c-green', 'Accepted', 'check') : e.sent ? tag('c-amber', 'Invite sent ' + esc(e.sent)) : tag('c-grey', 'Not invited'); }
+function personChip(p) {
+  if (!p.email || !p.phone) return tag('c-amber', (!p.email ? 'Email' : 'Phone') + ' missing', 'alert');
+  if (p.accepted) return tag('c-green', 'Accepted', 'check');
+  return p.told ? tag('c-gold', 'Invite sent' + (typeof p.told === 'string' ? ' ' + esc(p.told) : '')) : tag('c-grey', 'Not invited');
+}
+A.vresend = function (el) {
+  if (el.dataset.i != null) { S.invited[+el.dataset.i].told = today(); } else { execInv().sent = today(); }
+  if (S.draft && S.draft._k === 'person') delete S.draft;
+  save(); closeSheet(); render(); toast('Invite sent again');
+};
+A.vasktell = function (el) {
+  var p = S.invited[+el.dataset.i];
+  sheet('<h2 class="h2">Tell ' + esc(p.name.split(' ')[0]) + ' now?</h2><p class="p">We email a short note saying you have named them. They can’t open anything until a verified release.</p><button type="button" class="btn navy" data-act="vtell" data-i="' + el.dataset.i + '">Send the note</button><button type="button" class="btn quiet" data-act="close">Not now</button>');
+};
+A.vtell = function (el) { var p = S.invited[+el.dataset.i]; p.told = today(); if (S.draft && S.draft._k === 'person') delete S.draft; save(); closeSheet(); render(); toast('Note sent to ' + p.name.split(' ')[0]); };
+// Filter chips for a list. UI.filter resets to "All" on every navigation.
+function filterBar(opts, label) { return opts.length > 1 ? '<div class="filters" role="group" aria-label="' + label + '">' + ['All'].concat(opts).map(function (c) { return '<button type="button" data-act="filter" data-v="' + c + '" aria-pressed="' + (UI.filter === c) + '">' + c + '</button>'; }).join('') + '</div>' : ''; }
+function trigGroup(x) { var t = trigOf(x); return t === 'date' || t === 'event' ? 'Milestone' : TRIG[t]; }
+function trigOpts(l) { return ['On death', 'On incapacity', 'Death or incapacity', 'Milestone'].filter(function (t) { return l.some(function (x) { return trigGroup(x) === t; }); }); }
+// The recorder. Prototype: nothing is recorded, the length is a stand-in.
+function recorder(kind, on, act) {
+  var bars = ''; for (var i = 0; i < 44; i++) bars += '<i style="height:' + (10 + ((i * 37) % 28)) + 'px"' + (on && i < 30 ? ' class="on"' : '') + '></i>';
+  return '<div class="recbox"><div class="row between"><span class="rec-t">' + ic(kind === 'video' ? 'video' : 'mic', 20) + (on ? 'Recorded · 3:40' : 'Ready to record') + '</span><span class="rec-m">Max 10:00</span></div><div class="wave" aria-hidden="true">' + bars + '</div>' +
+    '<div class="acts">' + (on ? '<button type="button" class="recbtn pri" data-act="vplay">Play</button><button type="button" class="recbtn" data-act="' + act + '">Record again</button>' : '<button type="button" class="recbtn pri" data-act="' + act + '">' + ic(kind === 'video' ? 'video' : 'mic', 18) + 'Record ' + (kind === 'video' ? 'video' : 'voice') + '</button>') + '</div></div>';
+}
+A.vplay = function () { toast('Playing your recording'); };
+// Subscription: the last payment failed. The Vault keeps working while the card is updated.
+function billingNote(cls) {
+  return S.vault.billing === 'failed' ? '<section class="card pad-s amber ' + cls + '"><div class="row">' + ic('alert') + '<span><span class="strong">We couldn’t take your last payment.</span> Update your card to keep your Vault active. Nothing is lost.</span></div><button type="button" class="btn out sm" data-act="vcard">Update card</button></section>' : '';
+}
+A.vcard = function () {
+  sheet('<h2 class="h2">Update your card</h2><label class="field"><span class="label">Card number</span><input class="input" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456"></label><div class="row"><label class="field grow"><span class="label">Expiry</span><input class="input" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY"></label><label class="field grow"><span class="label">CVC</span><input class="input" inputmode="numeric" autocomplete="cc-csc" placeholder="123"></label></div><p class="small">Prototype: no card is charged.</p><button type="button" class="btn navy" data-act="vcardok">Save card</button><button type="button" class="btn quiet" data-act="close">Not now</button>');
+};
+A.vcardok = function () { delete S.vault.billing; save(); closeSheet(); render(); toast('Card updated'); };
+// What to do after this page: the first open task that lives somewhere else.
+var NEXT_COPY = { 'add your obligations': 'Add what you owe', 'add what you own': 'Add your first asset', 'add a sealed document': 'Seal a private document', 'record a message': 'Leave a message', 'add a recipient': 'Choose who receives things', 'sign the final fallback': 'Sign the final fallback', 'confirm a beneficiary': 'Confirm a beneficiary', 'finish the items you skipped': 'Finish the items you skipped' };
+function nextStep(here) {
+  if (S.vault.paused) return null;
+  var f = readiness().left.filter(function (x) { return x.go.indexOf('#/vault/' + here) !== 0; })[0];
+  if (f) return { h: NEXT_COPY[f.text] || f.text.charAt(0).toUpperCase() + f.text.slice(1), go: f.go };
+  return S.vault.reviewed ? null : { h: 'Start your yearly review', go: '#/vault/review/0' };
+}
+// One item as label/value pairs, for the read-only view.
+function itemRows(m, x) {
+  var r = [], to = (x.to || []).join(', ');
+  function a(k, v) { if (v != null && v !== '') r.push([k, v]); }
+  if (m.id === 'obl') {
+    var k = OBL_KINDS.filter(function (o) { return o[0] === okind(x); })[0];
+    a('Kind', k[1]); a(okind(x) === 'zakat' ? 'Zakat year' : okind(x) === 'mahr' ? 'Status' : 'Which one', x.sub); a('Amount', amtText(x) || 'Not entered yet'); a('Shared', x.joint ? 'Joint obligation' : ''); a('Started', x.started); a('How to repay', x.repay); a('Notes', x.notes); a('Proof', x.file);
+  } else if (m.id === 'assets') {
+    var am = acat(x) === AMANAH;
+    a('Category', acat(x)); a('Type', x.kindOf); if (am) a('Return it to', x.benName); else a('Approximate value', amtText(x) || 'Not entered yet'); a('Country', x.country); if (!am) a('Ownership', x.own === 'joint' ? 'Jointly owned' : 'Owned alone');
+    if (BEN_CATS.indexOf(acat(x)) >= 0) a('Beneficiary named', x.ben === 'yes' ? (x.benName || 'Yes') : x.ben === 'no' ? 'No' : 'Not confirmed');
+    a('Documents', x.docs); a('Notes', x.notes); a('Good to know', CAT_NOTE[acat(x)]); if (!am && x.country && x.country !== 'Canada') a('Abroad', 'Another country’s rules may apply');
+  } else if (m.id === 'sealed') { a('File', x.file || 'No file yet'); a('Released', trigLabel(x)); a('Recipients', to || 'Not chosen yet'); a('Message', x.note); }
+  else { a('Type', x.kind === 'video' ? 'Video' : 'Voice'); a('Recording', x.rec ? 'Recorded' : 'Not recorded yet'); a('Delivered', trigLabel(x)); if (trigOf(x) === 'date') a('If you pass away before then', x.before); a('Recipients', to || 'Not chosen yet'); }
+  return r;
+}
+/* Yearly review: four short checks. Each row links to the place where it is changed. */
+var REVIEW = [['Values', 'Are these amounts still about right?', 'Rough is fine. Change only what moved a lot.'], ['People', 'Can we still reach everyone?', 'A recipient needs an email and a phone number.'], ['Release', 'Is each item still released the right way?', 'Each item keeps its own trigger.'], ['Check-in', 'Are you well?', 'A yearly check-in. It changes nothing in your Vault.']];
+function reviewRows(n) {
+  var v = S.vault, r = [];
+  if (n === 0) { v.assets.forEach(function (x, i) { r.push({ t: x.name, s: acat(x), amt: acat(x) === AMANAH ? 'Amanah' : amtText(x) || 'No value yet', go: '#/vault/assets/edit/' + i, flag: x.todo || needsBen(x) }); }); v.obl.forEach(function (x, i) { r.push({ t: x.name, s: 'Obligation', amt: amtText(x) || 'No amount yet', go: '#/vault/obl/edit/' + i, flag: x.todo }); }); }
+  if (n === 1) { if (execName()) r.push({ t: execName(), s: 'Executor · from your Will', chip: execChip() }); S.invited.forEach(function (p) { r.push({ t: p.name, s: [p.rel, p.email, p.phone ? fmtPhone(p.phone) : ''].filter(Boolean).join(' · ') || 'No contact details yet', chip: personChip(p), go: '#/vault/people', flag: !p.email || !p.phone }); }); }
+  if (n === 2) { v.sealed.forEach(function (x, i) { r.push({ t: x.name, s: 'Sealed document' + ((x.to || []).length ? ' · to ' + x.to.join(', ') : ''), chip: tag('c-gold', trigLabel(x)), go: '#/vault/sealed/edit/' + i, flag: x.todo }); }); v.words.forEach(function (x, i) { r.push({ t: x.name, s: 'Message' + ((x.to || []).length ? ' · to ' + x.to.join(', ') : ''), chip: tag('c-gold', trigLabel(x)), go: '#/vault/words/edit/' + i, flag: x.todo }); }); if (!v.fallback) r.push({ t: 'Final fallback', s: 'Not signed yet', go: '#/vault/release', flag: true }); }
+  return r;
+}
+A.reviewPlan = function () { go('#/vault/review/0'); };
+A.vreviewed = function () { S.vault.reviewed = today(); save(); go('#/vault'); toast('Yearly review done'); };
 function needsBen(x) { return BEN_CATS.indexOf(acat(x)) >= 0 && x.ben !== 'yes' && x.ben !== 'no'; }
 // What is still open, in the order a person should do it. Drives the ring, the "next item" link and Home.
 function readiness() {
@@ -101,14 +174,14 @@ function vDash() {
     '<div class="vready"><div class="ring" style="--p:' + r.pct + '" role="img" aria-label="' + r.pct + '% ready"><b>' + r.pct + '%</b><span>Ready</span></div>' +
     '<div class="stack"><h2 class="h3">' + (r.left.length ? 'Your Vault is ' + r.pct + '% ready.' : 'Your Vault is ready.') + '</h2><p class="p">' +
     (r.left.length ? (r.left.length === 1 ? 'One thing left: ' : r.left.length === 2 ? 'Two things left: ' : 'Next: ') + r.left.slice(0, 2).map(function (x) { return x.text; }).join(', and ') + '.' : 'Everything is in place. Review it once a year.') + '</p>' +
-    (first ? '<div class="acts"><a class="btn gold sm" href="#/vault/guided">' + ic('star', 18) + (S.vault.g.at ? 'Continue with guidance' : 'Finish with guidance') + '</a><a class="lnk on-dark" href="' + first.go + '">Go to the next item' + ic('next', 18) + '</a></div>' : '') + '</div></div></section>' + paused() +
+    (first ? '<div class="acts"><a class="btn gold sm" href="#/vault/guided">' + ic('star', 18) + (S.vault.g.at ? 'Continue with guidance' : 'Finish with guidance') + '</a><a class="lnk on-dark" href="' + first.go + '">Go to the next item' + ic('next', 18) + '</a></div>' : '') + '</div></div></section>' + paused() + billingNote('noteb') +
     '<div class="vstats">' + vstat('Estate value', cadv(cad(v.assets.filter(function (x) { return acat(x) !== AMANAH; }))), 'across all assets', 'house') + vstat('Obligations', cadv(cad(v.obl)), 'settled before distribution', 'scale') + vstat('Sealed', v.sealed.length, 'released on your trigger', 'lock') + vstat('Final messages', v.words.length, 'voice and video', 'video') + '</div>' +
     (v.reviewed ? '' : '<section class="card pad-s amber noteb"><div class="row">' + ic('cal') + '<span><span class="strong">Yearly review due.</span> Check values and recipients once a year.</span></div><button type="button" class="btn out sm" data-act="reviewPlan">Start review</button></section>') +
     '<h2 class="sec">Manage your vault</h2><div class="g2">' + CFG.vaultModules.map(function (m) {
       return '<a class="card modlink" href="#/vault/' + m.id + '"><span class="ico navy">' + ic(MOD_IC[m.id], 26) + '</span><span class="g"><span class="h3">' + m.name + '</span><span class="small">' + m.desc + '</span><span class="row" style="gap:10px;margin-top:6px"><span class="cnt">' + status[m.id] + ' item' + (status[m.id] === 1 ? '' : 's') + '</span>' + chipFor(m) + '</span></span><span class="chev">' + ic('chev') + '</span></a>';
     }).join('') + '</div>' +
     '<div class="g2"><section class="card"><div class="row between"><h2 class="h3">Trusted People</h2><a class="lnk" href="#/vault/people">Manage</a></div>' +
-    (e ? '<div class="prow"><span class="num">1</span><span class="g"><span class="strong">' + esc(e) + '</span><br><span class="small">Executor · from your Will</span></span></div>' : '<p class="p">No executor yet. You choose one in your Will.</p>') +
+    (e ? '<div class="prow"><span class="num">1</span><span class="g"><span class="strong">' + esc(e) + '</span><br><span class="small">Executor · from your Will</span></span>' + execChip() + '</div>' : '<p class="p">No executor yet. You choose one in your Will.</p>') +
     '<div class="prow"><span class="ico" style="width:36px;height:36px">' + ic('shield', 18) + '</span><span class="g"><span class="strong">The Muslim Will</span><br><span class="small">Final fallback</span></span>' + (v.fallback ? tag('c-navy', 'Signed ' + esc(v.fallback)) : tag('c-amber', 'Not signed', 'alert')) + '</div>' +
     '<p class="small">' + S.invited.length + ' recipient' + (S.invited.length === 1 ? '' : 's') + ' · each one receives only what you assign</p></section>' +
     '<section class="card"><h2 class="h3">How your Vault is released</h2><p class="p">Nothing is released until our team verifies a death certificate or a hospital incapacity letter.</p>' +
@@ -121,7 +194,7 @@ function vDash() {
 
 /* ================= 3–6 · Sections ================= */
 function rowHtml(m, x, i, title, sub, tags, amount) {
-  return '<div class="vrow"><div class="g"><span class="t">' + esc(title) + '</span>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : '') + (tags ? '<span class="acts" style="gap:8px;margin-top:6px">' + tags + '</span>' : '') + '</div>' +
+  return '<div class="vrow"><div class="g"><a class="t" href="#/vault/' + m.id + '/view/' + i + '">' + esc(title) + '</a>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : '') + (tags ? '<span class="acts" style="gap:8px;margin-top:6px">' + tags + '</span>' : '') + '</div>' +
     (amount != null ? '<span class="amt">' + amount + '</span>' : '') + (S.vault.paused ? '' : '<a class="iconbtn end" href="#/vault/' + m.id + '/edit/' + i + '" aria-label="Edit ' + esc(title) + '">' + ic('pen', 20) + 'Edit</a>') + '</div>';
 }
 function amtText(x) { return x.amount == null || x.amount === '' ? null : (x.cur && x.cur !== 'CAD' ? x.cur + ' ' + money(x.amount).slice(1) : money(x.amount)); }
@@ -133,16 +206,17 @@ function vSection(m) {
   if (m.id === 'obl') {
     var by = function (ks) { return cad(v.obl.filter(function (x) { return ks.indexOf(okind(x)) >= 0; })); };
     totals = '<div class="vstats">' + vstat('Total recorded', cadv(cad(v.obl)), 'settled before distribution', 'scale') + vstat('Bank debts', cadv(by(['bank'])), 'loans, cards, mortgage') + vstat('Religious dues', cadv(by(['zakat', 'misc'])), 'zakat, fidya, kaffarah') + vstat('Owed to people', cadv(by(['person', 'mahr'])), 'family, friends, mahr') + '</div>';
-    body = OBL_GROUPS.map(function (g) {
+    totals += filterBar(OBL_GROUPS.filter(function (g) { return v.obl.some(function (x) { return g[2].indexOf(okind(x)) >= 0; }); }).map(function (g) { return g[0]; }), 'Filter by kind');
+    body = OBL_GROUPS.filter(function (g) { return UI.filter === 'All' || UI.filter === g[0]; }).map(function (g) {
       return groupCard(g[0], g[1], l.filter(function (r) { return g[2].indexOf(okind(r.x)) >= 0; }).map(function (r) {
         var k = OBL_KINDS.filter(function (o) { return o[0] === okind(r.x); })[0];
-        return rowHtml(m, r.x, r.i, r.x.name, [r.x.sub, r.x.started ? 'Since ' + r.x.started : '', r.x.notes].filter(Boolean).join(' · '), tag(k[0] === 'zakat' || k[0] === 'misc' ? 'c-gold' : 'c-navy', k[3]) + (r.x.file ? tag('c-grey', 'Proof attached') : '') + todoTag(r.x), amtText(r.x));
+        return rowHtml(m, r.x, r.i, r.x.name, [k[0] === 'mahr' ? '' : r.x.sub, r.x.started ? 'Since ' + r.x.started : '', r.x.notes].filter(Boolean).join(' · '), tag(k[0] === 'zakat' || k[0] === 'misc' || k[0] === 'mahr' ? 'c-gold' : 'c-navy', k[0] === 'mahr' && r.x.sub ? r.x.sub : k[3]) + (r.x.joint ? tag('c-navy', 'Joint') : '') + (r.x.file ? tag('c-grey', 'Proof attached') : '') + todoTag(r.x), amtText(r.x));
       }).join(''));
     }).join('');
   } else if (m.id === 'assets') {
     var own = v.assets.filter(function (x) { return acat(x) !== AMANAH; }), cats = ASSET_CATS.filter(function (c) { return v.assets.some(function (x) { return acat(x) === c; }); });
     totals = '<div class="vstats">' + vstat('Estimated estate value', cadv(cad(own)), 'across all assets', 'house') + vstat('Not in probate', cadv(cad(own.filter(function (x) { return x.ben === 'yes'; }))), 'named beneficiaries') + vstat('Abroad', cadv(cad(own.filter(function (x) { return x.country && x.country !== 'Canada'; }))), 'outside Canada') + '</div>' +
-      (cats.length > 1 ? '<div class="filters" role="group" aria-label="Filter by category">' + ['All'].concat(cats).map(function (c) { return '<button type="button" data-act="filter" data-v="' + c + '" aria-pressed="' + (UI.filter === c) + '">' + c + '</button>'; }).join('') + '</div>' : '') +
+      filterBar(cats, 'Filter by category') +
       (own.some(function (x) { return x.cur && x.cur !== 'CAD'; }) ? '<p class="small">Totals add CAD values only. Other currencies are listed, not converted.</p>' : '');
     body = cats.filter(function (c) { return UI.filter === 'All' || UI.filter === c; }).map(function (c) {
       return groupCard(c, CAT_NOTE[c], l.filter(function (r) { return acat(r.x) === c; }).map(function (r) {
@@ -153,21 +227,24 @@ function vSection(m) {
     }).join('');
   } else if (m.id === 'sealed') {
     totals = '<section class="card pad-s tint noteb"><div class="row">' + ic('lock') + '<span>Each file has its own release trigger. Nobody, including our staff, can open one before a verified release.</span></div></section>';
-    body = groupCard('Your sealed files', l.length + ' file' + (l.length === 1 ? '' : 's') + ' · encrypted', l.map(function (r) {
+    totals += filterBar(trigOpts(v.sealed), 'Filter by release');
+    body = groupCard('Your sealed files', l.length + ' file' + (l.length === 1 ? '' : 's') + ' · encrypted', l.filter(function (r) { return UI.filter === 'All' || trigGroup(r.x) === UI.filter; }).map(function (r) {
       return rowHtml(m, r.x, r.i, r.x.name, [r.x.file || (r.x.todo ? 'No file yet' : 'Note'), (r.x.to || []).length ? 'to ' + r.x.to.join(', ') : ''].filter(Boolean).join(' · '), tag('c-gold', trigLabel(r.x)) + todoTag(r.x));
     }).join(''));
   } else {
     totals = v.paused ? '' : '<section class="card recnew"><div class="stack" style="gap:4px"><h2 class="h3">Record something new</h2><p class="p">A short message, a du’a, advice for your children. Up to 10 minutes each.</p></div><div class="acts"><a class="btn out" href="#/vault/words/add/voice">' + ic('mic') + 'Record voice</a><a class="btn out" href="#/vault/words/add/video">' + ic('video') + 'Record video</a></div></section>';
     addBtn = '';
-    body = groupCard('Your messages', l.length + ' recorded', l.map(function (r) {
+    totals += filterBar(trigOpts(v.words), 'Filter by delivery');
+    body = groupCard('Your messages', l.length + ' recorded', l.filter(function (r) { return UI.filter === 'All' || trigGroup(r.x) === UI.filter; }).map(function (r) {
       return rowHtml(m, r.x, r.i, r.x.name, [r.x.kind === 'video' ? 'Video' : 'Voice', (r.x.to || []).length ? 'to ' + r.x.to.join(', ') : ''].filter(Boolean).join(' · '), tag(trigOf(r.x) === 'date' || trigOf(r.x) === 'event' ? 'c-navy' : 'c-gold', trigLabel(r.x)) + todoTag(r.x));
     }).join(''));
   }
   var icon = { obl: 'scale', assets: 'house', sealed: 'mail', words: 'video' }[m.id];
   var desc = { obl: 'What you owe, to people and to Allah, so your executor can settle it first.', assets: 'Everything you own, in Canada and abroad.', sealed: 'Private files, released only to the people you choose.', words: 'Your own voice, delivered on the day you choose.' }[m.id];
   var none = { obl: 'No obligations yet', assets: 'No assets yet', sealed: 'No sealed documents yet', words: 'No messages yet' }[m.id];
+  var nx = l.length ? nextStep(m.id) : null;
   return vpage(vhead(icon, m.name, desc, l.length ? addBtn : '') + secTabs(m.id) + paused() +
-    (l.length ? totals + body : (m.id === 'words' ? totals : '') + '<section class="card empty"><span class="ico">' + ic(icon, 26) + '</span><h2 class="h3">' + none + '</h2><p class="p">Start with one. You can add more anytime.</p>' + (m.id === 'words' ? '' : addBtn) + '</section>') + FOOT, { sub: m.id });
+    (l.length ? totals + body + (nx ? '<section class="card pad-s tint noteb"><div class="row">' + ic('next') + '<span><span class="strong">Next:</span> ' + esc(nx.h) + '</span></div><a class="btn out sm" href="' + nx.go + '">Go there</a></section>' : '') : (m.id === 'words' ? totals : '') + '<section class="card empty"><span class="ico">' + ic(icon, 26) + '</span><h2 class="h3">' + none + '</h2><p class="p">Start with one. You can add more anytime.</p>' + (m.id === 'words' ? '' : addBtn) + '</section>') + FOOT, { sub: m.id });
 }
 A.vfilter = function (el) { UI.filter = el.value; render(); };
 document.addEventListener('change', function (e) { var a = e.target.dataset && e.target.dataset.actChange; if (a && A[a]) A[a](e.target); });
@@ -177,10 +254,11 @@ function recipientPicker() {
   var l = trusted();
   return '<fieldset class="field" style="border:0;padding:0"><legend class="label" style="padding:0;margin-bottom:8px">Who receives it?</legend>' +
     (l.length ? '<div class="pickgrid">' + l.map(function (p, i) { var on = !!(S.draft.to || [])[i]; return '<label class="opt' + (on ? ' on' : '') + '"><input type="checkbox" data-f="draft.to.' + i + '" data-re' + (on ? ' checked' : '') + ' style="width:24px;height:24px;accent-color:#172033"><span>' + esc(p.name) + '<small>' + esc(p.rel || 'Recipient') + (p.exec || (p.email && p.phone) ? '' : ' · contact details missing') + '</small></span></label>'; }).join('') + '</div>' : '<p class="p">No trusted people yet.</p>') +
-    err('draft.to') + '<a class="lnk" href="#/vault/people">' + ic('plus', 18) + 'Add someone new</a></fieldset>';
+    err('draft.to') + '<button type="button" class="lnk" data-act="invite">' + ic('plus', 18) + 'Add someone new</button></fieldset>';
 }
 function trigPicker(keys, label) { return '<div class="field" role="radiogroup" aria-label="' + label + '"><span class="label">' + label + '</span><div class="pickgrid">' + keys.map(function (k) { return opt(TRIG[k], 'draft.trigger', k, TRIG_HINT[k]); }).join('') + '</div>' + err('draft.trigger') + '</div>'; }
 function vForm(m, idx, preset) {
+  draftBack();
   if (S.vault.paused) { location.replace('#/vault/' + m.id); return null; }
   var edit = idx != null, key = m.id + ':' + (edit ? idx : 'new');
   if (edit && !S.vault[m.id][idx]) { location.replace('#/vault/' + m.id); return null; }
@@ -196,13 +274,17 @@ function vForm(m, idx, preset) {
   if (m.id === 'obl') {
     title = edit ? 'Edit obligation' : 'Add an obligation'; lede = 'Record it once. Your executor sees it in the order they settle things.';
     f = '<div class="group" role="radiogroup" aria-label="What kind of obligation?"><span class="label">What kind of obligation?</span><div class="pickgrid">' + OBL_KINDS.map(function (k) { return opt(k[1], 'draft.kind', k[0], k[2]); }).join('') + '</div>' + err('draft.kind') + '</div>' +
-      '<div class="group">' + (d.kind === 'misc' ? sel('Which one?', 'draft.sub', ['Fidya (missed fasts)', 'Kaffarah', 'Hajj badal', 'Qard hasan']) : '') + (d.kind === 'zakat' ? inp('Zakat year', 'draft.sub', { ph: 'For example 1446 AH' }) : '') +
-      inp(d.kind === 'zakat' || d.kind === 'misc' ? 'Title' : 'Owed to', 'draft.name') + inp('Amount', 'draft.amount', { mode: 'decimal', hint: 'In CAD. An estimate is fine.' }) + inp('Date it started', 'draft.started', { opt: true, ph: 'YYYY-MM-DD' }) + inp('How to repay', 'draft.repay', { opt: true }) + '</div>' +
+      '<div class="group">' + (d.kind === 'misc' ? '<div class="field" role="radiogroup" aria-label="Which one?"><span class="label">Which one?</span><div class="pickgrid">' + ['Fidya (missed fasts)', 'Kaffarah', 'Hajj badal', 'Qard hasan'].map(function (k) { return opt(k, 'draft.sub', k); }).join('') + '</div></div>' : '') +
+      (d.kind === 'mahr' ? '<div class="field" role="radiogroup" aria-label="Is it deferred or unpaid?"><span class="label">Is it deferred or unpaid?</span><div class="pickgrid">' + opt('Deferred', 'draft.sub', 'Deferred', 'Agreed to be paid later') + opt('Unpaid', 'draft.sub', 'Unpaid', 'Due now, not yet paid') + '</div></div>' : '') +
+      (d.kind === 'zakat' ? inp('Zakat year', 'draft.sub', { ph: 'For example 1446 AH' }) : '') +
+      inp(d.kind === 'zakat' || d.kind === 'misc' ? 'Title' : 'Owed to', 'draft.name') + inp('Amount', 'draft.amount', { mode: 'decimal', hint: 'In CAD. An estimate is fine.' }) + inp('Date it started', 'draft.started', { opt: true, ph: 'YYYY-MM-DD' }) + inp('How to repay', 'draft.repay', { opt: true }) +
+      (d.kind === 'bank' || d.kind === 'person' ? '<label class="check"><input type="checkbox" data-f="draft.joint"' + (d.joint ? ' checked' : '') + '>Shared with someone else (joint)</label>' : '') + '</div>' +
       '<div class="group">' + area('Notes for your executor', 'draft.notes', { opt: true }) + '<div class="field"><span class="label">Proof<i>Optional</i></span><div class="filebox">' + (d.file ? '<span class="strong">' + esc(d.file) + '</span>' : '<span class="small">A note, message or receipt</span>') + '<label class="btn out sm" style="cursor:pointer"><input type="file" id="vfile" hidden>' + (d.file ? 'Replace' : 'Choose a file') + '</label></div></div></div><p class="small">Religious terms follow the scholars board’s wording.</p>';
   } else if (m.id === 'assets') {
     title = edit ? 'Edit asset' : 'Add an asset'; lede = 'Rough values are fine. You can update them anytime.';
     var ben = BEN_CATS.indexOf(d.cat) >= 0, am = d.cat === AMANAH;
-    f = '<div class="group">' + sel('Category', 'draft.cat', ASSET_CATS, { re: true }) + inp('Type', 'draft.kindOf', { opt: true, hint: d.cat === 'Registered plans' ? 'RRSP, RRIF, TFSA, FHSA, RESP, RDSP, LIRA, LIF' : '' }) + inp(am ? 'What is it?' : 'Name or institution', 'draft.name') +
+    f = '<div class="group" role="radiogroup" aria-label="Category"><span class="label">Category</span><div class="pickgrid cats">' + ASSET_CATS.map(function (c) { return opt(c, 'draft.cat', c); }).join('') + '</div>' + err('draft.cat') + '</div>' +
+      '<div class="group">' + inp('Type', 'draft.kindOf', { opt: true, hint: d.cat === 'Registered plans' ? 'RRSP, RRIF, TFSA, FHSA, RESP, RDSP, LIRA, LIF' : '' }) + inp(am ? 'What is it?' : 'Name or institution', 'draft.name') +
       (am ? inp('Return it to', 'draft.benName') : inp('Approximate value', 'draft.amount', { mode: 'decimal', hint: 'Rough is fine.' }) + sel('Currency', 'draft.cur', CURRENCIES)) + sel('Country', 'draft.country', CFG.countries) + '</div>' +
       (am ? '' : '<div class="group" role="radiogroup" aria-label="Do you own it alone?"><span class="label">Do you own it alone?</span><div class="pickgrid">' + opt('Yes, alone', 'draft.own', 'alone') + opt('Jointly', 'draft.own', 'joint') + '</div></div>') +
       (ben ? '<div class="group" role="radiogroup" aria-label="Is a beneficiary named?"><span class="label">Is a beneficiary named on this?</span>' + termLink('beneficiary') + '<div class="pickgrid">' + opt('Yes', 'draft.ben', 'yes') + opt('No', 'draft.ben', 'no') + opt('I’m not sure', 'draft.ben', 'unsure') + '</div>' + err('draft.ben') + '</div>' +
@@ -216,7 +298,7 @@ function vForm(m, idx, preset) {
   } else {
     title = (edit ? 'Edit ' : 'Add a ') + (d.kind === 'video' ? 'video' : 'voice') + ' message'; lede = 'Your own words, delivered when they matter most.'; saveLabel = 'Save message';
     var minor = trusted().filter(function (p, i) { return (d.to || [])[i] && p.dob && age({ y: +p.dob.slice(0, 4), m: +p.dob.slice(5, 7) || 1, d: +p.dob.slice(8, 10) || 1 }) < 18; })[0];
-    f = '<div class="group"><div class="field"><span class="label">Recording</span><div class="filebox">' + (d.rec ? '<span class="strong">' + ic(d.kind === 'video' ? 'video' : 'mic', 18) + ' Recorded</span><span class="small">Up to 10 minutes</span>' : '<span class="small">Up to 10 minutes. Record again as often as you like.</span>') + '<button type="button" class="btn out sm" data-act="vrec">' + (d.rec ? 'Record again' : 'Record') + '</button></div>' + err('draft.rec') + '</div>' + inp('Title', 'draft.name') + '</div>' +
+    f = '<div class="group"><div class="field"><span class="label">Recording</span>' + recorder(d.kind, d.rec, 'vrec') + err('draft.rec') + '</div>' + inp('Title', 'draft.name') + '</div>' +
       '<div class="group">' + trigPicker(['death', 'incap', 'either', 'date', 'event'], 'When should it be delivered?') + '</div>' +
       (d.trigger === 'date' ? '<div class="group">' + inp('Date', 'draft.date', { ph: 'YYYY-MM-DD', hint: 'A birthday or anniversary.' }) + sel('If I pass away before then', 'draft.before', ['Deliver on the date anyway', 'Deliver once verified']) + '</div>' : '') +
       (d.trigger === 'event' ? '<div class="group">' + inp('Which life event?', 'draft.event', { ph: 'Graduation, nikah, first child' }) + '</div>' : '') +
@@ -236,7 +318,7 @@ A.vsave = function (form) {
   need('draft.name', mid === 'obl' ? 'Enter who it is owed to, or a title.' : mid === 'assets' ? 'Enter a name.' : 'Enter a title.');
   if (mid === 'obl') {
     need('draft.kind', 'Choose one.'); if (d.amount === '' || d.amount == null || amt == null) E['draft.amount'] = 'Enter an amount, like 2000. An estimate is fine.';
-    x = { kind: d.kind, sub: d.sub, name: d.name, amount: amt, started: d.started, repay: d.repay, notes: d.notes, file: d.file, type: d.kind === 'zakat' || d.kind === 'misc' ? 'Religious' : d.kind === 'bank' ? 'Loan' : 'Other' };
+    x = { kind: d.kind, sub: d.sub, joint: !!d.joint, name: d.name, amount: amt, started: d.started, repay: d.repay, notes: d.notes, file: d.file, type: d.kind === 'zakat' || d.kind === 'misc' ? 'Religious' : d.kind === 'bank' ? 'Loan' : 'Other' };
   } else if (mid === 'assets') {
     need('draft.cat', 'Choose a category.'); need('draft.country', 'Choose a country.');
     var am = d.cat === AMANAH; if (!am && (d.amount === '' || d.amount == null || amt == null)) E['draft.amount'] = 'Enter a rough value, like 42000.';
@@ -371,7 +453,7 @@ function vGuided(a) {
   else if (st.id === 'msgd') {
     p = 'vault.g.det.m'; det = gdet('m'); if (!det.trigger) { det.trigger = 'death'; save(); }
     body = '<p class="eyebrow">Voice &amp; Video Messages</p><h1 class="h1">Your ' + (g.msg === 'video' ? 'video' : 'voice') + ' message</h1><p class="p">Four short steps on this screen.</p>' +
-      '<div class="group"><div class="field"><span class="label">1. Record</span><div class="filebox">' + (det.rec ? '<span class="strong">' + ic(g.msg === 'video' ? 'video' : 'mic', 18) + ' Recorded</span>' : '<span class="small">Up to 10 minutes</span>') + '<button type="button" class="btn out sm" data-act="grec">' + (det.rec ? 'Record again' : 'Record') + '</button></div></div>' + inp('2. Give it a title', p + '.name', { opt: true, ph: 'For Layla' }) + '</div>' +
+      '<div class="group"><div class="field"><span class="label">1. Record</span>' + recorder(g.msg === 'video' ? 'video' : 'voice', det.rec, 'grec') + '</div>' + inp('2. Give it a title', p + '.name', { opt: true, ph: 'For Layla' }) + '</div>' +
       '<div class="group" role="radiogroup" aria-label="When should it be delivered?"><span class="label">3. When should it be delivered?</span><div class="pickgrid">' + ['death', 'incap', 'either', 'date'].map(function (k) { return opt(TRIG[k], p + '.trigger', k, TRIG_HINT[k]); }).join('') + '</div>' + (det.trigger === 'date' ? inp('Date', p + '.date', { ph: 'YYYY-MM-DD' }) : '') + '</div>' +
       '<div class="group">' + gto(p).replace('Who receives it?', '4. Who receives it?') + '</div>';
   } else {
@@ -401,36 +483,38 @@ function vGuided(a) {
 function fallbackRow() {
   var f = S.vault.fallback;
   return '<div class="prow"><span class="ico" style="width:36px;height:36px">' + ic('shield', 18) + '</span><span class="g"><span class="strong">The Muslim Will (final fallback)</span><br><span class="small">If no executor can act, we appoint a lawyer for your estate.</span></span>' +
-    (f ? tag('c-navy', 'You signed ' + esc(f)) : tag('c-amber', 'Not signed', 'alert') + '<button type="button" class="btn out sm" data-act="vsign">Review and sign</button>') + '</div>';
+    (f ? tag('c-navy', 'You signed ' + esc(f)) + '<button type="button" class="lnk" data-act="vcopy">View signed copy</button>' : tag('c-amber', 'Not signed', 'alert') + '<button type="button" class="btn out sm" data-act="vsign">Review and sign</button>') + '</div>';
 }
 function execCard(full) {
   var e = execName(), x = S.will.d.exec || {};
   return '<section class="card"><h2 class="h2">' + (full ? 'Executors' : 'Executor order') + '</h2><p class="p">From your Will. To change them, update your Will.</p>' +
-    (e ? '<div class="prow"><span class="num">1</span><span class="g"><span class="strong">' + esc(e) + '</span><br><span class="small">' + esc([x.src === 'spouse' ? 'Spouse' : x.rel, x.email, x.phone ? fmtPhone(x.phone) : ''].filter(Boolean).join(' · ') || 'Executor') + '</span></span>' + tag('c-gold', 'From your Will') + '</div>' : '<p class="p strong">No executor yet.</p>') + fallbackRow() +
+    (e ? '<div class="prow"><span class="num">1</span><span class="g"><span class="strong">' + esc(e) + '</span><br><span class="small">' + esc([x.src === 'spouse' ? 'Spouse' : x.rel, x.email, x.phone ? fmtPhone(x.phone) : ''].filter(Boolean).join(' · ') || 'Executor') + '</span></span>' + execChip() + (full && !execInv().accepted ? '<button type="button" class="lnk" data-act="vresend">Resend</button>' : '') + '</div>' : '<p class="p strong">No executor yet.</p>') + fallbackRow() +
     '<div class="acts"><a class="btn out" href="' + (S.will.status === 'none' ? '#/will' : '#/will/view/executor') + '">' + (e ? 'Update executors in my Will' : 'Go to my Will') + '</a></div></section>';
 }
 A.vsign = function () { sheet('<h2 class="h2">Final fallback</h2><p class="p">If none of your executors can act, The Muslim Will appoints a lawyer to handle your estate. It is added to your Will at its next update.</p><p class="small">[Wording pending legal review]</p><button type="button" class="btn navy" data-act="vsigned">I accept and sign</button><button type="button" class="btn quiet" data-act="close">Not now</button>'); };
-A.vsigned = function () { S.vault.fallback = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' }); save(); closeSheet(); render(); toast('Signed'); };
+A.vsigned = function () { S.vault.fallback = today(); save(); closeSheet(); render(); toast('Signed'); };
+A.vcopy = function () { sheet('<h2 class="h2">Final fallback · signed copy</h2><div class="kv"><span>Signed by</span><b>' + esc(S.user.name || firstName()) + '</b></div><div class="kv"><span>Date</span><b>' + esc(S.vault.fallback) + '</b></div><p class="p">If none of your executors can act, The Muslim Will appoints a lawyer to handle your estate. It is added to your Will at its next update.</p><p class="small">[Wording pending legal review]</p><button type="button" class="btn navy" data-act="close">Close</button>'); };
 function vPeople() {
   var rec = S.invited;
   return vpage(vhead('people', 'Trusted People', 'The people who act for you, and the people you leave things to.') + setTabs('people') + execCard(true) +
     '<section class="card"><div class="row between"><div class="stack" style="gap:4px"><h2 class="h2">Recipients</h2><p class="p">They receive only what you assign. They have no authority over your estate.</p></div><button type="button" class="btn navy" data-act="invite">' + ic('plus') + 'Add a person</button></div>' +
     (rec.length ? '<div>' + rec.map(function (p, i) {
-      var n = receives(p.name), st = !p.email || !p.phone ? tag('c-amber', (!p.email ? 'Email' : 'Phone') + ' missing', 'alert') : p.told ? tag('c-gold', 'Invited') : tag('c-grey', 'Not invited yet');
+      var n = receives(p.name), ok = p.email && p.phone, st = personChip(p) + (ok && !p.accepted ? '<button type="button" class="lnk" data-act="' + (p.told ? 'vresend' : 'vasktell') + '" data-i="' + i + '">' + (p.told ? 'Resend' : 'Tell them now') + '</button>' : '');
       return '<div class="vrow"><div class="g"><span class="t">' + esc(p.name) + '</span><span class="s">' + esc([p.rel, p.email, p.phone ? fmtPhone(p.phone) : ''].filter(Boolean).join(' · ') || 'No contact details yet') + '</span><span class="s">Receives ' + n + ' item' + (n === 1 ? '' : 's') + '</span></div>' + st +
         '<button type="button" class="iconbtn end" data-act="vperson" data-i="' + i + '" aria-label="Edit ' + esc(p.name) + '">' + ic('pen', 20) + 'Edit</button></div>';
-    }).join('') + '</div>' : '<p class="p">No recipients yet.</p>') +
+    }).join('') + '</div>' : '<section class="card empty"><span class="ico">' + ic('people', 26) + '</span><h2 class="h3">No recipients yet</h2><p class="p">Add the people you’ll leave documents or messages to.</p></section>') +
     '<p class="small">' + ic('mail', 16) + ' We don’t contact recipients until something is released, unless you tell them now.</p></section>');
 }
 // One dialog adds or edits a recipient; it replaces the old "Invite family" sheet on desktop.
 A.invite = function (el) {
-  if (!el || !el.dataset || !el.dataset.keep) S.draft = { _k: 'person' };
+  if (!el || !el.dataset || !el.dataset.keep) { if (S.draft && S.draft._k && S.draft._k !== 'person') S.hold = S.draft; S.draft = { _k: 'person' }; }      // an open item form is kept while a person is added
   var d = S.draft, fam = d.i == null ? people().filter(function (x) { return !S.invited.some(function (i) { return norm(i.name) === norm(x.name); }); }) : [];
   sheet('<h2 class="h2">' + (d.i == null ? 'Add a person' : 'Edit person') + '</h2>' +
     (fam.length && !d.name ? '<div class="filters" style="margin:0;padding:0;flex-wrap:wrap">' + fam.map(function (x) { return '<button type="button" data-act="inviteUse" data-v="' + esc(x.name) + '" data-rel="' + x.rel + '">' + esc(x.name) + '</button>'; }).join('') + '</div>' : '') +
     inp('Full name', 'draft.name') + sel('Relationship', 'draft.rel', ['Spouse', 'Child', 'Parent', 'Sibling', 'Relative', 'Friend', 'Other']) + inp('Email', 'draft.email', { opt: true, type: 'email', hint: 'We send the secure invite here.' }) + inp('Mobile phone', 'draft.phone', { opt: true, type: 'tel', hint: 'For the one-time code. Canadian number.' }) + inp('Date of birth', 'draft.dob', { opt: true, ph: 'YYYY-MM-DD', hint: 'Only for children.' }) +
-    '<button type="button" class="btn navy" data-act="inviteSend">Save person</button>' + (d.i != null ? '<button type="button" class="btn danger" data-act="vrmperson">Remove</button>' : '') + '<button type="button" class="btn quiet" data-act="close">Cancel</button>');
+    '<button type="button" class="btn navy" data-act="inviteSend">Save person</button>' + (d.i != null && d.email && d.phone && !S.invited[d.i].accepted ? '<button type="button" class="btn out" data-act="' + (S.invited[d.i].told ? 'vresend' : 'vasktell') + '" data-i="' + d.i + '">' + (S.invited[d.i].told ? 'Resend invite' : 'Tell them now') + '</button>' : '') + (d.i != null ? '<button type="button" class="btn danger" data-act="vrmperson">Remove</button>' : '') + '<button type="button" class="btn quiet" data-act="close">Cancel</button>');
 };
+function draftBack() { if (S.hold && (!S.draft || S.draft._k === 'person')) { S.draft = S.hold; delete S.hold; } }
 A.inviteUse = function (el) { S.draft.name = el.dataset.v; S.draft.rel = el.dataset.rel || ''; A.invite({ dataset: { keep: '1' } }); };
 A.inviteFor = function (el) { S.draft = { _k: 'person', name: el.dataset.v }; A.invite({ dataset: { keep: '1' } }); };
 A.vperson = function (el) { var p = S.invited[+el.dataset.i]; S.draft = { _k: 'person', i: +el.dataset.i, name: p.name, rel: p.rel, email: p.email, phone: p.phone, dob: p.dob }; A.invite({ dataset: { keep: '1' } }); };
@@ -441,8 +525,10 @@ A.inviteSend = function () {
   if (d.dob && !/^\d{4}-\d{2}-\d{2}$/.test(d.dob)) E['draft.dob'] = 'Use a date like 2017-08-21.';
   if (Object.keys(E).length) { A.invite({ dataset: { keep: '1' } }); E = {}; return; }
   var p = { name: d.name.trim(), rel: d.rel, email: (d.email || '').trim(), phone: d.phone ? caPhone(d.phone) : '', dob: d.dob || '' };
-  if (d.i != null) { p.told = S.invited[d.i].told; S.invited[d.i] = p; } else S.invited.push(p);
-  delete S.draft; save(); closeSheet(); render(); toast(p.name + ' saved');
+  if (d.i != null) { p.told = S.invited[d.i].told; p.accepted = S.invited[d.i].accepted; S.invited[d.i] = p; } else S.invited.push(p);
+  delete S.draft;
+  if (S.hold) { var at = trusted().map(function (x) { return norm(x.name); }).indexOf(norm(p.name)); if (at >= 0) { S.hold.to = S.hold.to || []; S.hold.to[at] = true; } }      // came from an item form: tick the new person there
+  draftBack(); save(); closeSheet(); render(); toast(p.name + ' saved');
 };
 A.vrmperson = function () { S.invited.splice(S.draft.i, 1); delete S.draft; save(); closeSheet(); render(); };
 
@@ -472,7 +558,9 @@ A.vrem = function (el) { var r = S.vault.rem; r[el.dataset.k] = r[el.dataset.k] 
 /* ================= 10 · Account and data ================= */
 function vAccount() {
   var v = S.vault;
-  return vpage(vhead('down2', 'Account and data', 'Your information is yours. Take a copy any time.') + setTabs('account') +
+  var pp = price('vault');
+  return vpage(vhead('down2', 'Account and data', 'Your information is yours. Take a copy any time.') + setTabs('account') + paused() + billingNote('noteb') +
+    '<section class="card"><div class="row between"><h2 class="h2">Your plan</h2>' + (v.paused ? tag('c-amber', 'Paused', 'lock') : v.billing === 'failed' ? tag('c-amber', 'Payment needed', 'alert') : tag('c-green', 'Active', 'check')) + '</div><div class="kv"><span>My Vault</span><b>' + (pp.known ? pp.text : '[Price from API]') + '</b></div><div class="kv"><span>Last yearly review</span><b>' + (v.reviewed ? (v.reviewed === 'today' ? 'Done' : esc(v.reviewed)) : 'Due now') + '</b></div><div class="acts"><a class="lnk" href="#/plan">Plan and billing</a>' + (v.reviewed ? '' : '<button type="button" class="btn out sm" data-act="reviewPlan">Start yearly review</button>') + '</div></section>' +
     '<section class="card"><h2 class="h2">Download a copy</h2><p class="p">A password-protected ZIP of everything in your Vault.</p><div class="group"><label class="field"><span class="label">Choose a password for the file</span><input class="input' + (E.zip ? ' bad' : '') + '" id="zip" type="password" autocomplete="new-password"><span class="hint">We can’t recover this password. Keep it safe.</span>' + err('zip') + '</label></div><div class="acts"><button type="button" class="btn navy" data-act="vexport">Prepare download</button></div></section>' +
     '<div class="g2"><section class="card"><h2 class="h2">' + (v.paused ? 'Your Vault is paused' : 'Pause instead') + '</h2><p class="p">' + (v.paused ? 'It is read-only. Your release settings stay active.' : 'Keep your Vault safe and read-only at a lower price. Release settings stay active.') + '</p><span class="grow"></span><div class="acts"><button type="button" class="btn out" data-act="' + (v.paused ? 'vresume' : 'vaskpause') + '">' + (v.paused ? 'Resume my Vault' : 'Pause my Vault') + '</button></div></section>' +
     '<section class="card"><h2 class="h2">Close my Vault</h2><p class="p">Nothing will be released. Everything is deleted after 90 days; you can reopen before then.</p><span class="grow"></span><div class="acts"><button type="button" class="btn danger" data-act="vaskclose">Close my Vault</button></div></section></div>');
@@ -485,6 +573,29 @@ A.vaskclose = function () { sheet('<h2 class="h2">Close your Vault?</h2><p class
 A.vclose = function () { S.vault.active = false; S.vault.paused = false; S.vault.closed = true; save(); closeSheet(); go('#/vault'); };
 A.vreopen = function () { S.vault.active = true; S.vault.closed = false; save(); render(); };
 
+/* ================= One item, read-only ================= */
+function vView(m, i) {
+  var x = S.vault[m.id][i]; if (!x) { location.replace('#/vault/' + m.id); return null; }
+  var tags = (x.todo ? tag('c-amber', 'Add details', 'alert') : '') + (m.id === 'assets' && needsBen(x) ? tag('c-amber', 'Confirm beneficiary', 'alert') : '');
+  return vpage('<a class="iconbtn" href="#/vault/' + m.id + '">' + ic('back') + m.name + '</a><div class="cols wz"><div><div class="whead vn"><p class="eyebrow">My Vault · ' + m.name + '</p><h1 class="h1">' + esc(x.name) + '</h1>' + (tags ? '<div class="acts">' + tags + '</div>' : '') + '</div>' +
+    '<section class="wbody vview">' + itemRows(m, x).map(function (r) { return '<div class="kv"><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>'; }).join('') +
+    (S.vault.paused ? '' : '<div class="acts"><button type="button" class="btn danger" style="min-width:0" data-act="vaskdel" data-m="' + m.id + '" data-i="' + i + '">Remove</button><span class="sp"></span><a class="btn navy" href="#/vault/' + m.id + '/edit/' + i + '">' + ic('pen') + 'Edit</a></div>') + '</section></div>' +
+    '<aside class="rail"><section class="card pad-s"><div class="tick">' + ic('lock') + (m.id === 'sealed' || m.id === 'words' ? 'Private until a verified release' : 'Seen by your executor after a verified release') + '</div><div class="tick">' + ic('check') + 'Edit or remove anytime</div></section></aside></div>', { sub: m.id });
+}
+
+/* ================= Yearly review ================= */
+function vReview(a) {
+  if (S.vault.paused) { location.replace('#/vault'); return null; }
+  var n = Math.max(0, Math.min(REVIEW.length - 1, +a[0] || 0)), st = REVIEW[n], rows = reviewRows(n), last = n === REVIEW.length - 1, base = '#/vault/review/';
+  var body = last ? '<div class="pickgrid" role="radiogroup" aria-label="Are you well?">' + opt('Alhamdulillah, I’m well', 'vault.well', 'yes') + opt('Something has changed', 'vault.well', 'changed', 'A marriage, birth, move or illness') + '</div>' + (S.vault.well === 'changed' ? '<p class="p">Update what changed, then come back. <a class="lnk" href="#/vault">Go to My Vault</a></p>' : '')
+    : rows.length ? '<div>' + rows.map(function (r) { return '<div class="vrow"><div class="g"><span class="t">' + esc(r.t) + '</span><span class="s">' + esc(r.s) + '</span></div>' + (r.flag ? tag('c-amber', 'Check', 'alert') : '') + (r.chip || '') + (r.amt ? '<span class="amt">' + esc(r.amt) + '</span>' : '') + (r.go ? '<a class="btn out sm" href="' + r.go + '">Change</a>' : '') + '</div>'; }).join('') + '</div>' : '<p class="p">Nothing here yet.</p>';
+  return vpage('<a class="iconbtn" href="#/vault">' + ic('back') + 'My Vault</a><section class="card pad-s gtop"><div class="row between"><span class="eyebrow">Yearly review</span><span class="small strong">Step ' + (n + 1) + ' of ' + REVIEW.length + '</span></div><div class="bar" role="img" aria-label="Step ' + (n + 1) + ' of ' + REVIEW.length + '"><i style="width:' + Math.round((n + 1) / REVIEW.length * 100) + '%"></i></div></section>' +
+    '<div class="cols wz"><section class="card hero gbody"><p class="eyebrow">' + st[0] + '</p><h1 class="h1">' + st[1] + '</h1><p class="p">' + st[2] + '</p>' + body +
+    '<div class="acts">' + (n ? '<a class="btn out" style="min-width:0" href="' + base + (n - 1) + '">' + ic('back') + 'Back</a>' : '') + '<span class="sp"></span>' +
+    (last ? '<button type="button" class="btn navy" data-act="vreviewed">Finish review' + ic('check') + '</button>' : '<a class="btn navy" href="' + base + (n + 1) + '">' + (rows.length ? 'All correct' : 'Continue') + ic('next') + '</a>') + '</div></section>' +
+    '<aside class="rail"><section class="card pad-s"><h2 class="panel-t">Why once a year</h2><p class="p">Values and phone numbers change. A short check keeps what your family receives accurate.</p></section></aside></div>');
+}
+
 /* ================= routing: active Vault only ================= */
 R.vault = function (a) {
   vinit();
@@ -493,8 +604,9 @@ R.vault = function (a) {
     return shell('vault', 'My Vault', page((S.vault.closed ? '<section class="card pad-s amber noteb"><div class="row">' + ic('alert') + '<span><span class="strong">Your Vault is closed.</span> Everything is deleted after 90 days.</span></div><button type="button" class="btn out sm" data-act="vreopen">Reopen my Vault</button></section>' : '') + discoveryBody()));
   }
   var m = CFG.vaultModules.filter(function (x) { return x.id === a[0]; })[0];
-  if (m) return a[1] === 'add' ? vForm(m, null, a[2]) : a[1] === 'edit' ? vForm(m, +a[2]) : vSection(m);
+  if (m) return a[1] === 'add' ? vForm(m, null, a[2]) : a[1] === 'edit' ? vForm(m, +a[2]) : a[1] === 'view' ? vView(m, +a[2]) : vSection(m);
   if (a[0] === 'guided') return vGuided(a.slice(1));
+  if (a[0] === 'review') return vReview(a.slice(1));
   if (a[0] === 'people') return vPeople();
   if (a[0] === 'release') return vRelease();
   if (a[0] === 'reminders') return vReminders();

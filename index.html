@@ -3,526 +3,241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Estate Plan — Muslim Will</title>
+<title>Home — Muslim Will</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/shell.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
-  html { scrollbar-width: none; }
-  body {
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    background: #F7F5F0;
-    color: #16243D;
-    -webkit-font-smoothing: antialiased;
-    display: flex;
-  }
-  svg { display: block; }
+  /* Home: greeting + ONE primary card + what you have (2+ products) + at most ONE recommendation.
+     Tokens, sidebar, top bar and the phone tab bar come from shared/shell.css. */
+  body { font-size: 17px; }
 
-  /* ============ Sidebar ============ */
-  .sidebar {
-    width: 256.8px;
-    min-width: 256.8px;
-    min-height: 100vh;
-    background: #0D1B32;
-    padding: 19.2px 8px;
-  }
-  .logo {
-    display: flex;
-    align-items: flex-start;
-    gap: 9.6px;
-    padding: 0 8px;
-    margin-bottom: 19.2px;
-  }
-  .logo-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 16.8px;
-    font-weight: 500;
-    color: #FFFFFF;
-    line-height: 1.1;
-    margin-top: 1.6px;
-  }
-  .logo-sub {
-    font-size: 8.4px;
-    font-weight: 400;
-    color: #C9A45C;
-    letter-spacing: 0.02em;
-    margin-top: 2.4px;
-  }
-  .nav-active {
-    display: flex;
-    align-items: center;
-    gap: 11.2px;
-    height: 35.2px;
-    padding: 0 16px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 6.4px;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .nav-section {
-    display: flex;
-    align-items: center;
-    gap: 11.2px;
-    padding: 0 16px 0 14.4px;
-    margin-top: 24px;
-    height: 22.4px;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .badge {
-    margin-left: auto;
-    font-size: 7.6px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    color: rgba(255,255,255,0.62);
-    border: 0.8px solid rgba(255,255,255,0.28);
-    border-radius: 999px;
-    padding: 3.2px 8px;
-    line-height: 1.2;
-    margin-right: 4.8px;
-  }
-  .chev { color: rgba(255,255,255,0.65); }
-  .sub-link {
-    display: flex;
-    align-items: center;
-    gap: 11.2px;
-    padding-left: 24px;
-    margin-top: 12px;
-    height: 20.8px;
-    color: rgba(255,255,255,0.6);
-    font-size: 10.8px;
-    font-weight: 400;
-    text-decoration: underline;
-    text-underline-offset: 2.4px;
-    text-decoration-thickness: 0.8px;
-  }
-  .sub-link .circle { color: rgba(255,255,255,0.4); flex: none; }
-  .sub-link:first-of-type { margin-top: 11.2px; }
-  .sub-link:hover { color: rgba(255,255,255,0.8); }
-  .sub-link:active { color: rgba(255,255,255,0.9); }
-  .nav-active:hover { background: rgba(255,255,255,0.11); }
-  .nav-active:active { background: rgba(255,255,255,0.14); }
-  .sub-link:focus-visible, .nav-active:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
+  .content { width: 100%; max-width: 1000px; margin: 12px auto 64px; padding: 0 40px; display: flex; flex-direction: column; gap: 24px; }
+  .greet { font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1.1; letter-spacing: -.01em; margin-top: 8px; }
 
-  /* ============ Main ============ */
-  .main { flex: 1; min-width: 0; }
-  .topbar {
-    height: 58.4px;
-    display: flex;
-    align-items: center;
-    padding: 0 38.4px 0 28px;
-  }
-  .topbar-title { font-size: 12.8px; font-weight: 500; color: #3E4553; }
-  .topbar-right { margin-left: auto; display: flex; align-items: center; }
-  .bell-wrap { position: relative; margin-right: 24px; }
-  .bell-wrap .bell { color: #1B2437; }
-  .bell-badge {
-    position: absolute;
-    top: -13.6px;
-    right: -15.2px;
-    width: 13.6px;
-    height: 13.6px;
-    background: #C9A45C;
-    border-radius: 999px;
-    color: #FFFFFF;
-    font-size: 8px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .get-help {
-    height: 35.2px;
-    padding: 0 17.6px;
-    background: #FFFFFF;
-    border: 0.8px solid #DDD9CF;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: #1E2A44;
-    margin-right: 20.8px;
-    cursor: pointer;
-  }
-  .get-help:hover { background: #FBFAF7; }
-  .get-help:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
-  .get-help:active { transform: translateY(1px); }
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    background: #DCB670;
-    color: #2A3852;
-    font-size: 9.6px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 9.6px;
-  }
-  .user-name { font-size: 12.4px; font-weight: 600; color: #1B2437; margin-right: 8px; }
-  .user-chev { color: #1B2437; }
+  /* Primary card */
+  .focus { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 32px 36px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 20px 40px; align-items: end; }
+  .focus.warn { border-color: #E7C9C6; }
+  .focus .tx { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .lab { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; }
+  .lab.chip { align-self: flex-start; padding: 6px 14px 6px 10px; border-radius: 999px; }
+  .t-gold { color: var(--gold-ink); } .t-ok { color: var(--ok); } .t-warn { color: var(--warn); }
+  .lab.chip.t-ok { background: var(--ok-bg); } .lab.chip.t-warn { background: var(--warn-bg); } .lab.chip.t-gold { background: var(--gold-bg); }
+  .focus h2 { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.12; text-wrap: balance; }
+  .sup { font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .seg { display: flex; gap: 6px; max-width: 420px; margin-top: 4px; }
+  .seg i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); } .seg i.d { background: var(--gold); }
+  .segt { font-size: 16px; font-weight: 600; color: var(--muted); }
+  .steps { list-style: none; display: flex; gap: 0; margin: 8px 0 4px; flex-wrap: wrap; row-gap: 10px; }
+  .steps li { display: flex; align-items: center; gap: 10px; font-size: 16px; color: var(--muted); white-space: nowrap; }
+  .steps li:not(:last-child)::after { content: ''; width: 24px; height: 2px; background: var(--line); margin: 0 10px; }
+  .steps .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #DDD6CA; background: var(--surface); display: grid; place-items: center; color: #fff; flex: none; }
+  .steps li.d { color: var(--ink); } .steps li.d .dot { background: var(--ok); border-color: var(--ok); }
+  .steps li.c { color: var(--ink); font-weight: 700; } .steps li.c .dot { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 0 4px var(--gold-bg); }
+  .focus .acts { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .btn { min-height: 56px; padding: 0 30px; border: 0; border-radius: 999px; background: var(--ink); color: var(--surface); font-size: 17px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; white-space: nowrap; text-decoration: none; }
+  .btn:hover { background: var(--ink-2); }
+  .lnk { min-height: 48px; border: 0; background: none; font-size: 17px; font-weight: 700; color: var(--ink); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 6px; text-align: left; }
 
-  /* ============ Content ============ */
-  .content { max-width: 1039.2px; margin: 35.2px auto 48px; }
-
-  .hero {
-    position: relative;
-    isolation: isolate;
-    min-height: 318.4px;
-    border-radius: 12.8px;
-    background-color: #0D1B31;
-    background-image: url('brand%20asssets/vault.png');
-    background-repeat: no-repeat;
-    background-size: 988.8px auto;
-    background-position: 80px -104px;
-    padding: 67.2px 40px 25.6px;
-    overflow: hidden;
+  /* What you have + one recommendation */
+  .lower { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 24px; align-items: stretch; }
+  .block { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .block h3 { font-size: 18px; font-weight: 800; }
+  .rows { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+  .row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 18px; gap: 16px; align-items: center; min-height: 76px; padding: 14px 18px; text-decoration: none; color: var(--ink); }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row:hover { background: #FFFDF9; }
+  .row .ri { width: 44px; height: 44px; border-radius: 14px; background: var(--tint); display: grid; place-items: center; }
+  .row b { display: block; font-size: 17px; }
+  .row small { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; }
+  .row .rc { color: var(--muted); }
+  .sugg { position: relative; container-type: inline-size; border-radius: 24px; border: 1px solid #EADFCB; background: #FEF5EA; padding: 28px 30px; min-height: 220px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+  .sugg .art { position: absolute; inset: 0; background: no-repeat right bottom / auto 96%; pointer-events: none; }
+  .sugg.art-vault .art { background-image: url('brand%20asssets/home-banner-vault.png'); }
+  .sugg.art-family .art { background-image: url('brand%20asssets/home-banner-family.png'); }
+  .sugg .tx { position: relative; max-width: 58%; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .sugg .eb { font-size: 16px; font-weight: 700; color: var(--gold-ink); }
+  .sugg h3 { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.15; text-wrap: balance; }
+  .sugg p { font-size: 17px; line-height: 1.45; color: var(--muted); }
+  .sugg .btn { min-height: 50px; padding: 0 24px; margin-top: 6px; }
+  .sugg .lnk { margin-top: 2px; }
+  /* narrow banner (beside "Your plan", or on a phone): the picture steps back so the words keep their room */
+  @container (max-width: 480px) {
+    .sugg .art { background-size: auto 62%; }
+    .sugg .tx { max-width: 66%; }
+    .sugg h3 { font-size: 24px; }
   }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: url('brand%20asssets/main.png');
-    background-repeat: no-repeat;
-    background-size: 1560px auto;
-    background-position: -498px -201px;
-    mix-blend-mode: lighten;
-    opacity: 0.5;
-  }
-  .hero > * { position: relative; z-index: 1; }
-  .hero-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #C9A45C;
-    font-size: 9.6px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 29.6px;
-    font-weight: 500;
-    line-height: 40px;
-    letter-spacing: 0.002em;
-    color: #FBFAF6;
-    margin-top: 12.8px;
-  }
-  .hero p {
-    font-size: 13.2px;
-    font-weight: 300;
-    line-height: 22.8px;
-    color: rgba(230,235,244,0.9);
-    max-width: 584px;
-    margin-top: 11.2px;
+  /* phone: words on top at full width, picture in a band underneath */
+  @container (max-width: 380px) {
+    .sugg .tx { max-width: none; padding-bottom: 124px; }
+    .sugg .art { background-size: auto 132px; }
+    .sugg .btn { white-space: nowrap; }
   }
 
-  .hero-features {
-    display: flex;
-    align-items: center;
-    gap: 14.4px;
-    margin-top: 20px;
-    font-size: 10.4px;
-    font-weight: 400;
-    color: #E6EAF2;
+  @media (max-width: 900px) {
+    .content { padding: 0 20px; margin-bottom: 32px; gap: 20px; }
+    .focus { grid-template-columns: minmax(0, 1fr); padding: 24px; }
+    .focus h2 { font-size: 30px; }
+    .focus .acts { align-items: stretch; }
+    .btn { white-space: normal; text-align: center; padding: 10px 24px; }
+    .steps { flex-direction: column; row-gap: 12px; }
+    .steps li:not(:last-child)::after { display: none; }
+    .greet { font-size: 34px; }
   }
-  .hero-feature {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  }
-  .hero-feature svg { color: #C9A45C; flex: none; }
-  .hero-divider {
-    width: 0.8px;
-    height: 16px;
-    background: rgba(255,255,255,0.22);
-  }
-  .hero-btn {
-    display: flex;
-    width: fit-content;
-    align-items: center;
-    gap: 8px;
-    height: 32px;
-    margin-top: 14.4px;
-    padding: 0 20px;
-    background: #E5B54F;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: #16233F;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .hero-btn:hover { background: #ECBE5C; }
-  .hero-btn:focus-visible { outline: 2px solid #FBFAF6; outline-offset: 2px; }
-  .hero-btn:active { transform: translateY(1px); }
-
-  /* ============ Family banner ============ */
-  .family-banner {
-    margin-top: 25.6px;
-    display: flex;
-    align-items: center;
-    gap: 12.8px;
-    height: 64px;
-    padding: 0 20.8px;
-    background: linear-gradient(90deg, #FDF6E9, #F8ECD4);
-    border: 0.8px solid #E5D3AC;
-    border-radius: 11.2px;
-  }
-  .family-icon {
-    width: 38.4px;
-    height: 38.4px;
-    min-width: 38.4px;
-    border-radius: 999px;
-    background: #F1DEBB;
-    color: #333A47;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .family-banner h3 { font-size: 12.8px; font-weight: 600; color: #1C2B4A; }
-  .family-banner .family-sub { font-size: 11.2px; font-weight: 400; color: #6F7580; margin-top: 1.6px; }
-  .family-pill {
-    margin-left: auto;
-    background: #C09B4E;
-    color: #FFFDF6;
-    font-size: 10.4px;
-    font-weight: 600;
-    padding: 4.8px 12px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .family-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 19.2px;
-    height: 36.8px;
-    padding: 0 17.6px;
-    background: #FFFFFF;
-    border: 0.8px solid #DFD8C8;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    color: #16233F;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .family-link:hover { background: #FBFAF7; }
-  .family-link:active { transform: translateY(1px); }
-  .family-link:focus-visible { outline: 2px solid #C9A45C; outline-offset: 2px; }
-
-  /* ============ Feature cards ============ */
-  .cards {
-    margin-top: 25.6px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12.8px;
-  }
-  .card {
-    background: #FFFFFF;
-    border: 0.8px solid #EAE6DC;
-    border-radius: 11.2px;
-    height: 72px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-  }
-  .card-icon {
-    width: 35.2px;
-    height: 35.2px;
-    min-width: 35.2px;
-    border-radius: 8px;
-    background: #101F3B;
-    color: #C9A45C;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 16px;
-  }
-  .card h3 { font-size: 12.8px; font-weight: 600; color: #1C2B4A; }
-  .card p { font-size: 11.6px; font-weight: 400; color: #6F7580; margin-top: 2.4px; }
-
 </style>
 </head>
 <body>
-
-<aside class="sidebar">
-  <div class="logo">
-    <!-- Logo mark (recreated placeholder — exact asset not in brand folder) -->
-    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-      <defs>
-        <linearGradient id="lg1" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#F4E9CE"/><stop offset="1" stop-color="#C9A45C"/>
-        </linearGradient>
-      </defs>
-      <rect width="40" height="40" rx="8" fill="#13233F"/>
-      <path d="M9 28.5L13.5 11.5L17.5 23" stroke="#F5EEDD" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
-      <path d="M17.5 23L21.5 11.5L26 28.5L30.5 11.5" stroke="url(#lg1)" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
-    </svg>
-    <div>
-      <div class="logo-name">Muslim Will</div>
-      <div class="logo-sub">a product of Patriva</div>
-    </div>
-  </div>
-
-  <a class="nav-active" href="#">
-    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#DCCCA4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-    My Estate Plan
-  </a>
-
-  <div class="nav-section">
-    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-    My Bridge
-    <span class="badge">PREVIEW</span>
-    <svg class="chev" width="11.2" height="11.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-  </div>
-  <a class="sub-link" href="#">
-    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-    Choose a plan to begin
-  </a>
-
-  <div class="nav-section">
-    <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="11.5" r="4"/><path d="M12 9.8v1.7l1.2 1.2"/><path d="M7.5 21v-1.5M16.5 21v-1.5"/></svg>
-    My Vault
-    <span class="badge">PREVIEW</span>
-    <svg class="chev" width="11.2" height="11.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-  </div>
-  <a class="sub-link" href="#">
-    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-    Obligations Register
-  </a>
-  <a class="sub-link" href="#">
-    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-    Estate Inventory
-  </a>
-  <a class="sub-link" href="#">
-    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-    Sealed Disclosures
-  </a>
-  <a class="sub-link" href="#">
-    <svg class="circle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-    Final Words
-  </a>
-</aside>
+<a class="skip" href="#home">Skip to content</a>
+<aside class="sidebar" id="sidebar" aria-label="Sidebar"></aside>
 
 <div class="main">
-  <header class="topbar">
-    <span class="topbar-title">My Estate Plan</span>
-    <div class="topbar-right">
-      <div class="bell-wrap">
-        <svg class="bell" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span class="bell-badge">1</span>
-      </div>
-      <button class="get-help">Get help</button>
-      <div class="avatar">NM</div>
-      <span class="user-name">Nisreen</span>
-      <svg class="user-chev" width="12.8" height="12.8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-  </header>
-
-  <div class="content">
-    <section class="hero">
-      <div class="hero-label">
-        MY VAULT &nbsp;·&nbsp; MEMBER BENEFITS
-      </div>
-      <h1>Build on what you already have.</h1>
-      <p>Your Vault is active. Explore exclusive options to complete your Islamic estate plan —<br>from your Will to family coverage and more.</p>
-      <div class="hero-features">
-        <div class="hero-feature">
-          <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-          Islamic Will
-        </div>
-        <span class="hero-divider"></span>
-        <div class="hero-feature">
-          <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Family Vault
-        </div>
-        <span class="hero-divider"></span>
-        <div class="hero-feature">
-          <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-          Free Wasiyyah Template
-        </div>
-        <span class="hero-divider"></span>
-        <div class="hero-feature">
-          <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
-          Exclusive Member Pricing
-        </div>
-      </div>
-      <a class="hero-btn" href="plans.html">
-        Explore plans &amp; offers
-        <svg width="14.4" height="14.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-      </a>
-    </section>
-
-    <div class="family-banner">
-      <div>
-        <h3>Planning for more than one person?</h3>
-        <div class="family-sub">Upgrade to Family Vault and cover up to 5 members.</div>
-      </div>
-      <span class="family-pill">Save 33% per person</span>
-      <button class="family-link" type="button" data-open-family-drawer>
-        Compare Family Vault
-        <svg width="12.8" height="12.8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M8 21h8"/><path d="M4 7h16"/><path d="M6 7l-2.5 6a3 3 0 0 0 5 0L6 7z"/><path d="M18 7l-2.5 6a3 3 0 0 0 5 0L18 7z"/></svg>
-        </div>
-        <div>
-          <h3>Obligations Register</h3>
-          <p>Outstanding debts, unpaid zakat and mahr — recorded for your executor.</p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
-        </div>
-        <div>
-          <h3>Estate Inventory</h3>
-          <p>A living record of assets, accounts and property in one place.</p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div>
-          <h3>Sealed Disclosures</h3>
-          <p>Private notes and credentials, released only when needed.</p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"/></svg>
-        </div>
-        <div>
-          <h3>Final Words</h3>
-          <p>Personal wishes and guidance for those you leave behind.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <header class="topbar" id="topbar"></header>
+  <main class="content" id="home"></main>
 </div>
 
-<script src="family-drawer.js" defer></script>
+<script src="vault/config.js"></script>
+<script src="vault/mock-api.js"></script>
+<script src="vault/store.js"></script>
+<script src="shared/shell.js"></script>
+<script>
+(function () {
+  /* HOME RULES
+     1. One primary card. First match wins: something blocked on the user → a dated appointment → continue the Will →
+        sign the Will → the next My Vault step → a waiting status → a calm "up to date".
+        A task the user can act on always beats a status they can only wait on.
+     2. "Your plan" lists only what the user owns, and only when they own 2+ products.
+     3. At most one recommendation, never about the same thing as the primary card, never for something already owned,
+        and never while a Will task is open.
+     Demo states below; in production this comes from GET /home. */
+  var VN = {
+    start:  { kind: 'start', title: 'Set up your Vault step by step.', text: 'A few simple questions, one at a time.', cta: 'Start guided setup', href: '#/guided' },
+    people: { kind: 'people', title: 'Add a trusted person.', text: 'Choose who should receive your information.', cta: 'Add a trusted person', href: '#/people/new' },
+    done:   { kind: 'done' }
+  };
+  var DONE = { stage: 'complete', self: true };
+  var STATES = {
+    live:        { label: 'Live · uses My Vault data', live: true },
+    notstarted:  { label: 'New · nothing started', first: true, will: null, vault: null },
+    vaultentry:  { label: 'New · came for My Vault', first: true, intent: 'vault', will: null, vault: null },
+    drafting:    { label: 'Will in progress', will: { stage: 'drafting', done: 1 }, vault: null },
+    action:      { label: 'Scholar has a question', will: { stage: 'review', step: 1, action: true }, vault: null },
+    review:      { label: 'In scholar review', will: { stage: 'review', step: 1 }, vault: null },
+    legal:       { label: 'In legal review', will: { stage: 'review', step: 2 }, vault: null },
+    ready:       { label: 'Ready to sign', will: { stage: 'ready' }, vault: null },
+    booked:      { label: 'Signing booked', will: { stage: 'booked' }, vault: null },
+    done:        { label: 'Will complete · no Vault', will: DONE, vault: null },
+    attested:    { label: 'Will attested · no Vault', will: { stage: 'complete' }, vault: null },
+    reviewvault: { label: 'Will in review + Vault to set up', will: { stage: 'review', step: 1 }, vault: { next: VN.start } },
+    willvault:   { label: 'Will + Vault · getting started', will: DONE, vault: { next: VN.start } },
+    people:      { label: 'Will + Vault · no trusted person', will: DONE, vault: { next: VN.people } },
+    allset:      { label: 'Will + Vault · all set', will: DONE, vault: { next: VN.done } },
+    yearly:      { label: 'Will + Vault · yearly review due', will: DONE, vault: { next: VN.done, reviewDue: true } },
+    vaultonly:   { label: 'Vault only', will: null, vault: { next: VN.start } },
+    billing:     { label: 'Vault payment problem', will: DONE, vault: { next: VN.done, billing: true } }
+  };
+  var CH = ['About You', 'Family', 'Trusted People', 'Bequests', 'Witnesses', 'Review'];
+  var REVIEW = ['Submitted', 'Scholar review', 'Legal review', 'Ready to sign'];
 
+  // Live state: the Will is a demo (complete); My Vault comes from the real Vault store.
+  function liveState() {
+    var V = window.VaultStore.sel, s = V.state();
+    return { will: DONE, vault: s.subscribed ? { next: V.nextAction() } : null };
+  }
+
+  function ic(n, s) { s = s || 18; return '<svg width="' + s + '" height="' + s + '" aria-hidden="true"><use href="#' + n + '"/></svg>'; }
+
+  /* The one primary card. kind: 'do' (the user can act) · 'wait' (nothing to do) · 'done'. */
+  function primary(st) {
+    var w = st.will, v = st.vault, vTask = v && v.next.kind !== 'done';
+    if (v && v.billing) return { kind: 'do', urgent: true, tone: 'warn', chip: true, lab: 'Payment needed', li: 'i-alert', h: 'We couldn’t renew My Vault.', p: 'Update your payment to keep it active.', cta: 'Update payment', href: 'vault.html#/settings', about: 'vault' };
+    if (w && w.action) return { kind: 'do', urgent: true, chip: true, lab: 'Needs your answer', li: 'i-help', h: 'Your scholar has a question.', p: 'Your review continues once you answer.', cta: 'Answer the question', soon: 'Scholar questions', about: 'will' };
+    if (w && w.stage === 'booked') return { kind: 'do', lab: 'Signing booked', li: 'i-cal', h: 'Your signing appointment', p: 'Thursday 20 November · 2:00 PM · Online', cta: 'View appointment', soon: 'Your appointment', about: 'will' };
+    if (!w && !v && st.intent === 'vault') return { kind: 'do', lab: 'My Vault', li: 'i-vault', h: 'Keep your estate organized.', p: 'One private place for what your family will need.', cta: 'See how it works', href: 'vault.html#/discover', about: 'vault' };
+    if (!w && !v) return { kind: 'do', lab: 'Islamic Will · free', li: 'i-doc', h: 'Start your Islamic Will.', p: 'Free to create and print.', cta: 'Start my free Will', soon: 'My Will', about: 'will' };
+    if (w && w.stage === 'drafting') return { kind: 'do', lab: 'Islamic Will', li: 'i-doc', h: 'Continue your Will.', p: 'Next: ' + CH[w.done], seg: w.done, cta: 'Continue ' + CH[w.done], soon: 'My Will', about: 'will' };
+    if (w && w.stage === 'ready') return { kind: 'do', lab: 'Islamic Will', li: 'i-pen', h: 'Your Will is ready to sign.', p: 'Sign at home, or with a notary.', cta: 'Continue to signing', soon: 'Signing', about: 'will' };
+    if (vTask) return { kind: 'do', lab: 'My Vault · next step', li: 'i-vault', h: v.next.title, p: v.next.text, cta: v.next.cta, href: 'vault.html' + v.next.href, about: 'vault' };
+    if (w && w.stage === 'review') return { kind: 'wait', lab: 'In review', li: 'i-clock', h: 'Your Will is in review.', step: w.step, p: 'We’ll email you when it’s ready to sign.', about: 'will' };
+    if (w && v) return { kind: 'done', tone: 'ok', chip: true, lab: 'Up to date', li: 'i-check', h: 'Your plan is up to date.', p: 'Review it when life changes.', about: 'plan' };
+    if (w) return { kind: 'done', tone: 'ok', chip: true, lab: w.self ? 'Signed at home' : 'Attested and stored', li: 'i-check', h: 'Your Islamic Will is complete.', p: 'View or update it anytime.', cta: 'View my Will', soon: 'My Will', about: 'will' };
+    return { kind: 'done', tone: 'ok', chip: true, lab: 'Up to date', li: 'i-check', h: 'My Vault is up to date.', p: 'Review it when life changes.', cta: 'Open My Vault', href: 'vault.html#/overview', about: 'vault' };
+  }
+
+  // What the user owns, in plain words (no counts or percentages).
+  function planRows(st) {
+    var r = [], w = st.will, v = st.vault;
+    if (w) {
+      var t = w.action ? 'Needs your answer' : { drafting: 'In progress', review: 'In ' + REVIEW[w.step || 1].toLowerCase(), ready: 'Ready to sign', booked: 'Signing booked', complete: 'Complete' }[w.stage];
+      r.push({ i: 'i-doc', n: 'Islamic Will', s: t, ok: w.stage === 'complete' });
+    }
+    if (v) {
+      var k = v.next.kind, vs = v.billing ? 'Payment needed' : k === 'done' ? 'Up to date' : k === 'start' ? 'Ready to set up' : 'In progress';
+      r.push({ i: 'i-vault', n: 'My Vault', s: vs, ok: k === 'done' && !v.billing, href: 'vault.html#/overview' });
+    }
+    return r;
+  }
+
+  // One recommendation, or none.
+  function recommendation(st, f) {
+    var w = st.will, v = st.vault;
+    if (f.urgent || (f.kind === 'do' && f.about === 'will')) return null;           // finish what matters first
+    if (!w) return { eb: 'Islamic Will · free', h: 'Ready to create your Islamic Will?', p: 'It’s free to create and print.', cta: 'Create your free Will', soon: 'My Will', art: 'family' };
+    if (!v) return { eb: 'Expand your estate plan', h: 'There’s more you can keep protected.', p: 'See what My Vault can help you organize.', cta: 'See how it works', href: 'vault.html#/discover', art: 'vault' };
+    if (v.reviewDue && f.kind === 'done') return { eb: 'Yearly review', h: 'Time for your yearly review.', p: 'Check that everything is still right.', cta: 'Review my Vault', href: 'vault.html#/overview', art: 'family' };
+    return null;
+  }
+
+  function rowsHTML(rows) {
+    return rows.map(function (x) {
+      return '<a class="row" href="' + (x.href || '#') + '"' + (x.href ? '' : ' data-soon="My Will"') + '><span class="ri">' + ic(x.i, 22) + '</span><span><b>' + x.n + '</b><small class="t-' + (x.ok ? 'ok' : 'gold') + '">' + ic(x.ok ? 'i-check' : 'i-clock', 16) + x.s + '</small></span><span class="rc">' + ic('i-chev', 18) + '</span></a>';
+    }).join('');
+  }
+  function action(o, cls) {
+    return (o.href ? '<a class="' + cls + '" href="' + o.href + '">' : '<button class="' + cls + '" type="button" data-soon="' + (o.soon || 'This') + '">') + MW.esc(o.cta) + ' ' + ic('i-arrow', 18) + (o.href ? '</a>' : '</button>');
+  }
+
+  function render(key) {
+    var st = STATES[key].live ? liveState() : STATES[key], f = primary(st), rows = planRows(st), s = recommendation(st, f);
+    var tone = f.tone || 'gold';
+    var h = '<h1 class="greet">' + (st.first ? 'Welcome, Nisreen.' : 'Welcome back, Nisreen.') + '</h1>';
+
+    h += '<section class="focus' + (tone === 'warn' ? ' warn' : '') + '" aria-label="What to do next"><div class="tx">' +
+      '<p class="lab t-' + tone + (f.chip ? ' chip' : '') + '">' + ic(f.li, 18) + f.lab + '</p><h2>' + MW.esc(f.h) + '</h2>';
+    if (f.step != null) h += '<ol class="steps">' + REVIEW.map(function (x, i) { var c = i < f.step ? 'd' : i === f.step ? 'c' : ''; return '<li class="' + c + '"' + (c === 'c' ? ' aria-current="step"' : '') + '><span class="dot">' + (c === 'd' ? ic('i-check', 11) : '') + '</span>' + x + '</li>'; }).join('') + '</ol>';
+    if (f.p) h += '<p class="sup">' + MW.esc(f.p) + '</p>';
+    if (f.seg != null) { var b = ''; for (var i = 0; i < 6; i++) b += '<i' + (i < f.seg ? ' class="d"' : '') + '></i>'; h += '<div class="seg" aria-hidden="true">' + b + '</div><p class="segt">' + f.seg + ' of 6 chapters done</p>'; }
+    h += '</div>';
+    if (f.cta) h += '<div class="acts">' + action(f, 'btn') + '</div>';
+    h += '</section>';
+
+    var showPlan = rows.length > 1;
+    if (showPlan || s) {
+      h += '<div class="lower">';
+      if (showPlan) h += '<section class="block" aria-labelledby="plan-t"><h3 id="plan-t">Your plan</h3><div class="rows">' + rowsHTML(rows) + '</div></section>';
+      // the recommendation gets the solid button only when the primary card has no action of its own
+      if (s) h += '<section class="sugg art-' + s.art + '" aria-label="Suggestion"><span class="art" aria-hidden="true"></span><div class="tx"><p class="eb">' + s.eb + '</p><h3>' + s.h + '</h3><p>' + s.p + '</p>' + action(s, f.cta ? 'lnk' : 'btn') + '</div></section>';
+      h += '</div>';
+    }
+    document.getElementById('home').innerHTML = h;
+
+    // Shared shell. On Home the sidebar shows the four destinations only; Vault sections appear once you are inside My Vault.
+    var will = rows.filter(function (r) { return r.n === 'Islamic Will'; })[0];
+    document.getElementById('sidebar').innerHTML = MW.sidebar({ active: 'home', willStatus: will ? will.s : 'Free', willPending: !!(st.will && st.will.stage !== 'complete'), vault: { subscribed: !!st.vault } });
+    document.getElementById('topbar').innerHTML = MW.topbar({ crumbs: [{ label: 'Home' }], alert: !!f.urgent });
+    document.getElementById('sb-demo').innerHTML = '<label for="state">Prototype · preview state</label><select id="state">' + Object.keys(STATES).map(function (k) { return '<option value="' + k + '"' + (k === key ? ' selected' : '') + '>' + STATES[k].label + '</option>'; }).join('') + '</select>';
+  }
+
+  MW.sprite();
+  var start = (location.search.match(/[?&]state=([a-z]+)/) || [])[1];
+  if (!STATES[start]) start = 'live';
+  document.addEventListener('change', function (e) { if (e.target.id === 'state') { history.replaceState(null, '', '?state=' + e.target.value); render(e.target.value); } });
+  document.addEventListener('click', function (e) {
+    var soon = e.target.closest('[data-soon]');
+    if (soon) { e.preventDefault(); MW.toast(soon.getAttribute('data-soon') + ' isn’t part of this prototype yet'); }
+  });
+  render(start);
+})();
+</script>
 </body>
 </html>

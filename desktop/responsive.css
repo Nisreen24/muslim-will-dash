@@ -1,0 +1,164 @@
+/* =====================================================================================================
+   SMALL SCREENS AND ZOOM — loaded last.
+   The desktop build is composed for 768px and up. This file keeps it usable below that: a narrow window,
+   a phone opened on the desktop link, or a desktop browser zoomed to 150–300%. Nothing here changes the
+   layout at 768px and wider, apart from the two guards at the top.
+   Breakpoints: ≤767 one column, navigation in a drawer · ≤479 tighter spacing, single-column figures.
+   ===================================================================================================== */
+
+/* Guards for every width: nothing may push the page sideways. */
+.dsk .input, .dsk select.input, .dsk textarea.input { max-width: 100%; }
+.dsk img { max-width: 100%; }
+.top .tt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 767px) {
+  :root, html.side-min, html.side-focus { --side: 0px; --pad: 16px; --gap: 18px; }
+
+  /* ---- Navigation: a drawer opened by the menu button ---- */
+  .main { margin-left: 0; }
+  .side, html.side-min .side, html.side-focus .side { width: min(304px, 86vw); padding: 20px 14px 18px; align-items: stretch; transform: translateX(-104%); z-index: 80; box-shadow: 0 0 40px rgba(5, 15, 31, .35); visibility: hidden; }
+  html.side-open .side { transform: none; visibility: visible; }
+  html.side-open .main::before { content: ''; position: fixed; inset: 0; z-index: 70; background: rgba(5, 15, 31, .5); }
+  .side-h, html.side-min .side-h { flex-direction: row; justify-content: flex-start; padding: 0 6px 18px; }
+  .side .brand span, html.side-min .side .brand span, html.side-focus .side .brand span { display: block !important; }
+  .side-body, html.side-min .side-body, html.side-focus .side-body { display: flex !important; align-items: stretch; }
+  .side a.nv { width: auto; justify-content: flex-start; padding: 0 16px; }
+  .side a.nv span { display: inline; }
+  .side a.nv .chip { display: inline-flex; }
+  .side .sub:not([hidden]) { display: flex; }
+  .side .gtog { display: flex; }
+  .grp { justify-content: flex-start; }
+  .grp a.nv { flex: 1; }
+  .side .session { display: flex; }
+  .menu-t, html.side-focus .menu-t { display: inline-flex !important; margin: 0; }
+
+  /* ---- Top bar: menu, title, three icons; the Guided / Manual switch takes its own row ---- */
+  .top { height: auto; min-height: 60px; flex-wrap: wrap; gap: 4px; padding: 6px 10px; }
+  .top .tt { flex: 1 1 0; font-size: 16px; padding-left: 4px; }
+  .top .sp, .top .saved { display: none; }
+  .top .tbtn { padding: 0 8px; }
+  .top .tbtn.line { font-size: 0; gap: 0; width: 44px; padding: 0; }                    /* Get help: icon only, the name stays in aria */
+  .top .rel > .tbtn[data-v="pop-user"] { font-size: 0; gap: 0; padding: 0 4px; }
+  .top .rel > .tbtn[data-v="pop-user"] > svg { display: none; }
+  .top .seg { order: 10; flex: 1 1 100%; display: flex; margin: 2px 0 4px; }
+  .top .seg a { flex: 1; justify-content: center; }
+  .pop, .pop.sm { position: fixed; left: 10px; right: 10px; top: 62px; width: auto; }
+  .pub-top { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+  .pub-top .acts { gap: 8px 12px; }
+  .pub-top .chip { display: none; }
+
+  /* ---- Page ---- */
+  .pg { padding: 18px 16px 88px; }
+  .dsk .card { padding: 18px 16px; }
+  .dsk .card.pad-s { padding: 16px; }
+  .card.hero { padding: 22px 18px; }
+  .dsk .btn { min-width: 0; max-width: 100%; }
+  .dsk .chip { white-space: normal; text-align: left; }
+  .cols, .cols.wz, .cols.wz3, .g2, .g3, .kv2, .dsk .group:not([role]), .pickgrid, .pickgrid.cats, .duo, .auth, .auth.reg, .vband.two, .vhd.dash { grid-template-columns: minmax(0, 1fr); }
+  .cols > .rail, .cols.wz .rail, .cols.wz3 > .rail { grid-template-columns: minmax(0, 1fr); }
+  .g4, .dsk .tiles, .vstats, .vstats:has(> :nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .dsk .group[role] .opt, .dsk .prompt .opt, .gbody .input, .dsk .three { max-width: 100%; }
+  .pg-h { align-items: flex-start; }
+  .dsk .filters { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 6px; scrollbar-width: none; }
+  .dsk .filters::-webkit-scrollbar { display: none; }
+
+  /* Tab rows scroll sideways instead of wrapping into a grid */
+  .vtabs { display: flex; overflow-x: auto; border-radius: 18px; scrollbar-width: none; }
+  .vtabs::-webkit-scrollbar, .grail::-webkit-scrollbar, .tabs-d::-webkit-scrollbar { display: none; }
+  .vtabs a { flex: none; white-space: nowrap; padding: 6px 16px; }
+  .grail { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .grail li { flex: 0 0 96px; }
+  .tabs-d { overflow-x: auto; scrollbar-width: none; }
+  .tabs-d a { flex: none; white-space: nowrap; }
+  .tbl { display: block; overflow-x: auto; white-space: nowrap; }
+  .tbl th, .tbl td { padding: 14px 16px; }
+
+  /* ---- Vault ---- */
+  .vhd { padding: 18px 18px 22px; border-radius: 22px; }
+  .vhd-row { align-items: flex-start; }
+  .vhd-row .btn { width: 100%; }
+  .vready { flex-wrap: wrap; padding: 16px; }
+  .vready .ring { width: 92px; height: 92px; }
+  .vready .ring b { font-size: 24px; }
+  .vready .acts .btn { width: 100%; }
+  .modlink { gap: 14px !important; }
+  .modlink .ico, .modlink .ico.navy { width: 48px; height: 48px; }
+  .modlink .row { flex-wrap: wrap; }
+  .noteb, .recnew { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+  .noteb .btn, .recnew .acts .btn { width: 100%; }
+  .recnew .acts { flex-direction: column; align-items: stretch; }
+  .card > .row.between, .stack > .row.between { flex-wrap: wrap; gap: 10px 16px; }
+  .card > .row.between > .btn { width: 100%; }
+  .vrow, .prow { flex-wrap: wrap; gap: 8px 14px; }
+  .vrow .g { flex: 1 1 100%; }
+  .prow .g { flex: 1 1 calc(100% - 60px); }
+  .vrow .amt { margin-right: auto; }
+  .vrow > .lnk, .prow > .lnk, .vrow > .btn { white-space: nowrap; }
+  .dsk .kv { flex-wrap: wrap; gap: 2px 16px; }
+  .dsk .kv > * { min-width: 0; max-width: 100%; }
+  .vview .kv span { max-width: 100%; flex: 1 1 100%; }
+  .vview .kv b { text-align: left; }
+  .whead, .wbody { padding: 20px 16px; }
+  .wbody { gap: 22px; }
+  .wbody .acts, .gbody > .acts { flex-wrap: wrap; gap: 10px; }
+  .wbody .acts .sp, .gbody > .acts .sp { display: none; }
+  .wbody .acts .btn, .gbody > .acts .btn { flex: 1 1 140px; white-space: normal; }
+  .gbody > .acts .lnk { flex: 1 1 100%; }
+  .filebox { flex-direction: column; align-items: flex-start; }
+  .filebox .btn { margin-left: 0; }
+  .recbox { padding: 16px; }
+  .setlink { min-height: 60px; }
+  .list .li { gap: 10px; }
+
+  /* ---- Signed-out pages ---- */
+  .duo { padding: 8px 16px 48px; gap: 24px; }
+  .duo .txt { max-width: none; gap: 16px; }
+  .duo .txt .h1 { font-size: clamp(30px, 8.4vw, 40px); }
+  .duo .txt .p { font-size: 17px; }
+  .duo .txt .acts .btn { flex: 1 1 auto; }
+  .duo .art { padding: 20px; min-height: 0; }
+  .dsk-dots a { width: 30px; }
+  .auth-l, .auth-l.tall { position: static; height: auto; padding: 20px 16px; gap: 12px; }
+  .auth-l .h1, .auth-l.tall .h1 { font-size: 28px; }
+  .auth-l .auth-art, .auth-l .fixbox, .auth-l .tl, .auth-l .trust, .auth-l.tall > .eyebrow { display: none; }
+  .auth-l.tall > .eyebrow:first-of-type { display: block; margin-top: 8px !important; }
+  .auth-top { padding: 12px 16px; flex-wrap: wrap; justify-content: space-between; }
+  .auth-r .formcol { padding: 28px 16px 64px; }
+
+  /* ---- Dialogs and prototype controls ---- */
+  .sheet-back { align-items: flex-end; padding: 0; }
+  .sheet { max-width: none; border-radius: 24px 24px 0 0; padding: 22px 16px 24px; }
+  .demo-toggle { top: auto; bottom: 10px; right: 10px; transform: none; writing-mode: horizontal-tb; width: auto; height: 36px; padding: 0 14px; border-radius: 999px; opacity: .9; }
+  #toast { top: 70px; }
+}
+
+@media (max-width: 479px) {
+  .g4, .dsk .tiles { grid-template-columns: minmax(0, 1fr); }
+  .vstats, .vstats:has(> :nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vstat b { font-size: 21px; white-space: nowrap; }
+  .vstat b small { display: block; }                            /* the currency sits above the figure, so the figure never breaks */
+  .vstat { padding: 14px; min-width: 0; }
+  .list .li > .small.strong { display: none; }                  /* the switch already shows On / Off */
+  .top .tt small { display: none; }
+  .modlink .chev { display: none; }
+}
+@media (max-width: 359px) {
+  .vstats, .vstats:has(> :nth-child(4)) { grid-template-columns: minmax(0, 1fr); }
+  .pg { padding-inline: 12px; }
+  .dsk .filters { margin: 0 -12px; padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 767px) { .side { transition: transform .2s ease, visibility .2s; } }
+
+/* Tablet (768–1023): the top bar keeps the title readable by showing Get help and the account as icons. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .top .tbtn.line { font-size: 0; gap: 0; width: 44px; padding: 0; }
+  .top .rel > .tbtn[data-v="pop-user"] { font-size: 0; gap: 0; padding: 0 4px; }
+  .top .rel > .tbtn[data-v="pop-user"] > svg { display: none; }
+  .top .tt { flex: 0 1 auto; }
+}
+
+/* Rows inside half-width cards: the status moves under the name instead of squeezing it. */
+@media (max-width: 1279px) {
+  .prow { flex-wrap: wrap; row-gap: 8px; }
+  .prow .g { flex: 1 1 160px; }
+}

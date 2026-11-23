@@ -1,0 +1,84 @@
+/* Shared tokens + desktop shell (sidebar, top bar). Used by Home (index.html) and My Vault (vault.html). */
+:root {
+  --ink: #172033; --ink-2: #222D45; --ink-deep: #0F1729;
+  --gold: #C9A15B; --gold-ink: #7A5C24; --gold-bg: #F3E7CF; --gold-soft: #FBF3E3;
+  --parch: #F6F1E8; --surface: #FBF8F3; --white: #FFFFFF; --tint: #F1E7D6;
+  --line: #E7E1D8; --line-2: #D9D1C4;
+  --muted: #5B6460;               /* darker than the brand #6E7773 so body text passes AA */
+  --ok: #2F6B4F; --ok-bg: #E3EEE7;
+  --warn: #8C2F39; --warn-bg: #F6E6E4;
+  --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sidebar-w: clamp(268px, 17vw, 320px);
+  --radius: 1.125rem;
+  /* Fluid base size: 16px on a 1280px laptop, ~17px at 1440, 19px from ~1900px. */
+  font-size: clamp(16px, 0.3125vw + 12px, 19px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; font-family: var(--sans); background: var(--parch); color: var(--ink); -webkit-font-smoothing: antialiased; display: flex; }
+svg { display: block; flex: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+.skip { position: absolute; left: -999px; top: 8px; z-index: 50; background: var(--ink); color: #fff; padding: .75rem 1rem; border-radius: .5rem; }
+.skip:focus { left: 8px; }
+
+/* ---------- sidebar ---------- */
+.sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); min-height: 100vh; background: var(--ink-deep); padding: 1.25rem .75rem; display: flex; flex-direction: column; gap: .25rem; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.sb-logo { display: flex; align-items: center; gap: .625rem; padding: 0 .5rem 1.25rem; text-decoration: none; }
+.sb-name { display: block; font-family: var(--serif); font-size: 1.25rem; color: #fff; line-height: 1.1; }
+.sb-sub { display: block; font-size: .75rem; color: var(--gold); margin-top: 2px; }
+.sb-nav { display: flex; flex-direction: column; gap: .25rem; }
+.sb-link { display: flex; align-items: center; gap: .75rem; min-height: 3rem; padding: 0 .875rem; border-radius: .625rem; color: rgba(255,255,255,.84); font-size: 1rem; font-weight: 600; text-decoration: none; }
+.sb-link:hover { background: rgba(255,255,255,.06); color: #fff; }
+.sb-link.on { background: rgba(255,255,255,.1); color: #fff; }
+.sb-st { margin-left: auto; font-size: .8125rem; font-weight: 600; color: rgba(255,255,255,.6); }
+.sb-st.gold { color: #DCC08A; }
+.sb-sub-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 0 .5rem .5rem; border-left: 1px solid rgba(255,255,255,.14); margin-left: 1.5rem; }
+.sb-sub-nav a { display: flex; align-items: center; gap: .5rem; min-height: 2.5rem; padding: 0 .75rem; border-radius: .5rem; font-size: .9375rem; color: rgba(255,255,255,.72); text-decoration: none; }
+.sb-sub-nav a:hover { color: #fff; background: rgba(255,255,255,.05); }
+.sb-sub-nav a.on { color: #fff; background: rgba(201,161,91,.18); font-weight: 700; }
+.sb-badge { margin-left: auto; white-space: nowrap; flex: none; font-size: .75rem; font-weight: 700; color: var(--ink); background: #E6C98F; border-radius: 999px; padding: .125rem .5rem; }
+.sb-demo { margin-top: auto; padding: 1rem .5rem .25rem; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-direction: column; gap: .5rem; }
+.sb-demo:empty { display: none; }
+.sb-demo label, .sb-demo .sb-demo-t { display: block; font-size: .8125rem; font-weight: 700; color: rgba(255,255,255,.6); }
+.sb-demo select { width: 100%; min-height: 2.75rem; border-radius: .5rem; border: 1px solid rgba(255,255,255,.22); background: #13233F; color: #fff; font-weight: 600; font-size: .875rem; padding: 0 .625rem; }
+.sb-demo .sb-chk { display: flex; align-items: center; gap: .5rem; font-size: .875rem; color: rgba(255,255,255,.78); font-weight: 500; cursor: pointer; }
+.sb-demo .sb-chk input { width: 1.125rem; height: 1.125rem; accent-color: var(--gold); }
+.sb-demo button { min-height: 2.5rem; border-radius: .5rem; border: 1px solid rgba(255,255,255,.22); background: transparent; color: rgba(255,255,255,.85); font-size: .875rem; font-weight: 600; cursor: pointer; }
+
+/* ---------- main + top bar ---------- */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.topbar { min-height: 4.25rem; display: flex; align-items: center; gap: 1.25rem; padding: 0 clamp(1.5rem, 3vw, 3.5rem); }
+.tb-title { display: flex; align-items: center; gap: .5rem; font-size: 1rem; font-weight: 600; color: var(--muted); min-width: 0; flex-wrap: wrap; }
+.tb-title a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; }
+.tb-title a:hover { color: var(--ink); }
+.tb-title [aria-current] { color: var(--ink); }
+.tb-sep { color: var(--line-2); }
+.tb-right { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
+.tb-bell { position: relative; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; cursor: pointer; }
+.tb-bell .dot { position: absolute; top: .55rem; right: .6rem; width: .625rem; height: .625rem; border-radius: 50%; background: #C2453D; border: 2px solid var(--surface); }
+.tb-help { min-height: 2.75rem; padding: 0 1.125rem; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; font-size: .9375rem; font-weight: 600; cursor: pointer; }
+.tb-help:hover { background: #fff; }
+.tb-user { display: flex; align-items: center; gap: .625rem; font-size: .9375rem; font-weight: 700; }
+.tb-av { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--ink); color: var(--parch); font-size: .8125rem; font-weight: 700; display: grid; place-items: center; }
+
+/* small confirmation message, shared by Home and My Vault */
+.mw-toast { position: fixed; left: 50%; bottom: calc(1.5rem + var(--tabbar-h, 0rem)); transform: translateX(-50%); z-index: 60; max-width: calc(100vw - 2rem); background: var(--ink); color: var(--parch); padding: .875rem 1.375rem; border-radius: 999px; font-size: 1.0625rem; font-weight: 600; text-align: center; box-shadow: 0 16px 40px -12px rgba(15,23,41,.5); }
+
+/* Phones and small tablets: the sidebar becomes a slim logo bar plus a bottom tab bar (Home · My Will · My Vault · Profile). */
+@media (max-width: 900px) {
+  :root { --tabbar-h: 4.5rem; }
+  body { flex-direction: column; padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px)); }
+  .sidebar { display: contents; }
+  .sb-logo { order: 0; background: var(--ink-deep); padding: .75rem 1.25rem; }
+  .main { order: 1; flex: none; width: 100%; }
+  .sb-demo { order: 2; margin: 2rem 0 0; background: var(--ink-deep); padding: 1.25rem; border-top: 0; }
+  .sb-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; flex-direction: row; gap: .25rem; background: var(--ink-deep); padding: .375rem .5rem calc(.375rem + env(safe-area-inset-bottom, 0px)); border-top: 1px solid rgba(255,255,255,.12); }
+  .sb-link { flex: 1 1 0; min-width: 0; flex-direction: column; justify-content: center; gap: .25rem; min-height: 3.75rem; padding: 0 .25rem; font-size: .875rem; white-space: nowrap; }
+  .sb-link .sb-st, .sb-sub-nav { display: none; }
+  .topbar { padding: 0 1.25rem; min-height: 3.75rem; }
+  .tb-help, .tb-user { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

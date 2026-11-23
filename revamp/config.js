@@ -13,6 +13,9 @@ window.MW_CONFIG = {
 
   products: { will: true, vault: true, notary: true },
 
+  // true → the Will is closed to everyone in both builds (see will-lock.js). false → everything opens again, unchanged.
+  willLocked: true,
+
   // What the "Add to your plan" page lists. One short line each; price comes from `pricing`.
   packages: [
     { id: 'will', name: 'Basic Will', line: 'Create and print your Islamic Will.' },

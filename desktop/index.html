@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="desktop.css">
 <!-- Approved design language (tokens + components from the approved mobile prototype). Loaded last. -->
 <link rel="stylesheet" href="approved.css">
+<!-- Small screens and browser zoom: one column and a drawer below 768px. Loaded last. -->
+<link rel="stylesheet" href="responsive.css">
 </head>
 <body>
 <div id="app"></div>
@@ -22,7 +24,7 @@
 <aside class="demo" id="demo" hidden aria-label="Prototype controls">
   <button type="button" class="x" id="demo-x">Close</button>
   <h2>Prototype states</h2>
-  <p>Not part of the product. Each button loads the state the API would return. <a href="qa-report.html" style="color:#d8c090">Delivery QA</a> · <a href="../revamp/index.html" style="color:#d8c090">Phone version</a></p>
+  <p>Not part of the product. Each button loads the state the API would return. <a href="qa-report.html" style="color:#d8c090">Delivery QA</a> · <a href="../vault-status.html" style="color:#d8c090">Vault status</a> · <a href="../revamp/index.html" style="color:#d8c090">Phone version</a></p>
   <h3>Entry</h3>
   <div class="set">
     <button type="button" data-demo="e-will">Free Will funnel (new visitor)</button>
@@ -52,6 +54,11 @@
     <button type="button" data-demo="v-empty">Vault active · empty</button>
     <button type="button" data-demo="v-part">Vault active · incomplete</button>
     <button type="button" data-demo="v-healthy">Vault active · healthy</button>
+    <button type="button" data-demo="v-review">Vault active · yearly review due</button>
+    <button type="button" data-demo="v-failed">Vault active · payment failed</button>
+    <button type="button" data-demo="v-paused">Vault paused</button>
+    <button type="button" data-demo="v-closed">Vault closed</button>
+    <button type="button" data-demo="w-complete">Not subscribed · discovery</button>
   </div>
   <h3>Vault only</h3>
   <div class="set"><button type="button" data-demo="v-only">Vault active · no Will</button></div>
@@ -68,10 +75,16 @@
 <script src="../revamp/app.js"></script>
 <!-- Desktop screens replace every phone screen. -->
 <script src="desktop.js"></script>
+<!-- The approved introduction, shown before the Will. Adds a route; changes no Will screen. -->
+<script src="../revamp/intro.js"></script>
 <!-- My Vault: the client's ten new pages. -->
 <script src="vault.js"></script>
+<script src="../revamp/vault-demo.js"></script>
 <!-- Notarized Attestation: Document Upload and scheduling, from the live site. -->
 <script src="attest.js"></script>
+<script src="responsive.js"></script>
+<!-- Will lock: closes the Will while MW_CONFIG.willLocked is true. Loaded last. -->
+<script src="../revamp/will-lock.js"></script>
 <script>
 // Shareable links: index.html?demo=<state>#/route loads that prototype state once, then opens the route.
 (function () { var d = new URLSearchParams(location.search).get('demo'), h = location.hash; if (d && DEMO[d]) { DEMO[d](); history.replaceState(null, '', location.pathname + (h || location.hash)); } })();

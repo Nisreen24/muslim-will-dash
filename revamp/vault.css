@@ -35,3 +35,17 @@
 .switch[aria-checked="true"]::before { background: var(--navy); }
 .switch[aria-checked="true"]::after { left: 31px; }
 @media (prefers-reduced-motion: no-preference) { .switch::after { transition: left .15s; } }
+/* Additions: recorder, review, status actions */
+.recbox { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; background: linear-gradient(118deg, #10233F 0%, #17345C 100%); color: #FBF8F3; }
+.recbox .rec-t { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--gold); }
+.recbox .rec-m { font-size: 15px; color: #D5CFC4; }
+.wave { display: flex; align-items: center; gap: 3px; height: 44px; overflow: hidden; }
+.wave i { flex: none; width: 4px; border-radius: 2px; background: rgba(255,255,255,.3); }
+.wave i.on { background: var(--gold); }
+.recbtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,.5); background: transparent; color: #FBF8F3; font-weight: 800; font-size: 16px; }
+.recbtn.pri { background: #FBF8F3; border-color: #FBF8F3; color: var(--navy); }
+fieldset > button.lnk { background: none; border: 0; font: inherit; font-weight: 700; }
+.li.col { flex-direction: column; align-items: stretch; gap: 10px; }
+.li.col .row { gap: 12px; }
+/* Very narrow phones (320px): the switch already shows On / Off, so the word gives its room to the title. */
+@media (max-width: 359px) { .li > .small.strong { display: none; } .li { gap: 10px; } }

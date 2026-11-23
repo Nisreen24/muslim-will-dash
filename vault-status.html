@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Vault — status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<style>
+  :root { --page: #F3EEE5; --card: #FBF8F3; --ink: #172033; --text: #4F5854; --muted: #6E6A66; --line: #E7E1D8; --gold: #7A5B1E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 500 16px/1.55 Manrope, system-ui, sans-serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 80px; display: flex; flex-direction: column; gap: 28px; }
+  h1 { font: 400 40px/1.1 'DM Serif Display', serif; color: var(--ink); margin: 0; }
+  h2 { font: 400 26px/1.2 'DM Serif Display', serif; color: var(--ink); margin: 0 0 6px; }
+  p { margin: 0; max-width: 78ch; }
+  .eb { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+  .band { background: linear-gradient(118deg, #10233F, #17345C); color: #F3EEE5; border: 0; }
+  .band h1 { color: #fff; } .band .eb { color: #C9A15B; } .band a { color: #F3EEE5; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px 22px; font-weight: 700; }
+  a { color: var(--ink); text-underline-offset: 3px; }
+  .wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  th, td { text-align: left; vertical-align: top; padding: 11px 12px; border-top: 1px solid var(--line); }
+  th { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-top: 0; }
+  td:first-child { font-weight: 800; color: var(--ink); }
+  .st { white-space: nowrap; font-weight: 800; }
+  code { font-size: 14px; background: #EAE4DA; padding: 1px 6px; border-radius: 6px; white-space: nowrap; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 78ch; }
+  .tag { display: inline-block; padding: 3px 12px; border-radius: 999px; background: #EAE4DA; color: var(--ink); font-weight: 800; font-size: 13px; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<main>
+  <section class="band">
+    <p class="eb">Client priority update · 22 Nov 2026</p>
+    <h1>My Vault is the priority. The Will is frozen.</h1>
+    <p>Every page in <b>new pages</b> was compared with the phone and desktop builds. Missing Vault pieces were built. The Will was not changed, apart from the approved introduction placed before it.</p>
+    <div class="links">
+      <a href="desktop/index.html?demo=v-healthy#/vault">Desktop · My Vault</a>
+      <a href="revamp/index.html?demo=v-healthy#/vault">Phone · My Vault</a>
+      <a href="desktop/index.html?demo=w-none#/intro/0">Desktop · introduction</a>
+      <a href="revamp/index.html?demo=w-none#/intro/0">Phone · introduction</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>1 · New pages, compared with the Vault</h2>
+    <p>✅ already included · 🟡 existed, refined now · ❌ was missing, built now · 🔁 merged with another page · ⏸ needs the Will, deferred</p>
+    <div class="wrap"><table>
+      <thead><tr><th>Reference</th><th>Requirement</th><th>Status</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr><td>1 · Dashboard</td><td>Readiness ring, next item, section cards, release summary, settings, offer end date</td><td class="st">✅</td><td><code>#/vault</code></td></tr>
+        <tr><td>1 · Dashboard</td><td>“Yearly review due” leads to a real review</td><td class="st">❌ built</td><td><code>#/vault/review/0–3</code> — values, people, release, check-in</td></tr>
+        <tr><td>1 · Dashboard</td><td>Executor status (Accepted / Invite sent)</td><td class="st">❌ built</td><td>Trusted People card and page</td></tr>
+        <tr><td>2 · Guided wizard</td><td>One question per step, save and exit, skip, review</td><td class="st">✅</td><td><code>#/vault/guided</code></td></tr>
+        <tr><td>3 · Obligations</td><td>Totals, groups, add and edit form, proof, scholars note</td><td class="st">✅</td><td><code>#/vault/obl</code></td></tr>
+        <tr><td>3 · Obligations</td><td>“Joint” and “Deferred” tags; “Which one?” as choices</td><td class="st">🟡 refined</td><td>Add form, list rows</td></tr>
+        <tr><td>4 · Estate Inventory</td><td>Totals, not in probate, abroad, amanah, beneficiary check, filter</td><td class="st">✅</td><td><code>#/vault/assets</code></td></tr>
+        <tr><td>4 · Add an asset</td><td>Category as visible choices, not a dropdown</td><td class="st">🟡 refined</td><td>Desktop add form</td></tr>
+        <tr><td>5 · Sealed Documents</td><td>List, release trigger per file, recipients, message</td><td class="st">✅</td><td><code>#/vault/sealed</code></td></tr>
+        <tr><td>5 · 6 · Add forms</td><td>“Add someone new” without losing the form</td><td class="st">🟡 fixed</td><td>The form stays open; the new person is ticked</td></tr>
+        <tr><td>6 · Messages</td><td>Record voice or video, delivery trigger, milestone date, under-18 note</td><td class="st">✅</td><td><code>#/vault/words</code></td></tr>
+        <tr><td>6 · Add a message</td><td>Recorder with Play and Record again</td><td class="st">🟡 refined</td><td>Add, edit and guided steps</td></tr>
+        <tr><td>7 · Trusted People</td><td>Executors, final fallback, recipients, add a person</td><td class="st">✅ 🔁</td><td><code>#/vault/people</code> — the inline form is one dialog</td></tr>
+        <tr><td>7 · Trusted People</td><td>Recipient status, “Tell them now”, Resend</td><td class="st">❌ built</td><td>Row action on desktop, person dialog on phone</td></tr>
+        <tr><td>7 · 9</td><td>Second (alternate) executor in the order</td><td class="st">⏸ deferred</td><td>The Will collects one executor; adding one is a Will change</td></tr>
+        <tr><td>8 · Reminders</td><td>Eight reminders, two always on, contact details</td><td class="st">✅</td><td><code>#/vault/reminders</code></td></tr>
+        <tr><td>9 · Release settings</td><td>Four steps, executor order, fallback, triggers</td><td class="st">✅</td><td><code>#/vault/release</code></td></tr>
+        <tr><td>9 · Release settings</td><td>View signed copy of the fallback</td><td class="st">❌ built</td><td>Release settings, Trusted People</td></tr>
+        <tr><td>10 · Export and close</td><td>Download, pause, close, reopen</td><td class="st">✅</td><td><code>#/vault/account</code></td></tr>
+        <tr><td>Brief</td><td>View an item before editing (desktop)</td><td class="st">❌ built</td><td><code>#/vault/&lt;section&gt;/view/&lt;n&gt;</code></td></tr>
+        <tr><td>Brief</td><td>Filters on every list</td><td class="st">🟡 refined</td><td>Obligations by kind; documents and messages by trigger</td></tr>
+        <tr><td>Brief</td><td>Contextual next action</td><td class="st">🟡 refined</td><td>“Next” at the end of each section</td></tr>
+        <tr><td>Brief</td><td>Subscription states</td><td class="st">🟡 refined</td><td>Not subscribed, active, payment failed, paused, closed — each has a preset</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>2 · The Will</h2>
+    <p><span class="tag">FROZEN FOR DEVELOPMENT</span></p>
+    <ul>
+      <li>No Will screen, form, chapter, navigation, review or signing step was changed. The Will pages produce the same markup with and without the new files.</li>
+      <li><b>Only addition:</b> the approved six-step introduction (“Will your family inherit the way you intend?” → “The wrong shares” → “An estate no one can find” → “Create your Islamic Will for free”). New visitors already saw it. It now also opens the first time a signed-in person chooses <b>Start my Will</b>.</li>
+      <li>Its last button, and Skip, hand over to the existing Will start. Nothing after that point is new.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3 · Deferred — future Will UX review</h2>
+    <p><span class="tag">DEFERRED — FUTURE WILL UX REVIEW</span></p>
+    <p>Kept on record. Not built. To be reconsidered after the Vault work is complete.</p>
+    <ul>
+      <li>New guided Will navigation.</li>
+      <li>New Will form structure.</li>
+      <li>Additional Will states.</li>
+      <li>Dashboard-driven changes to the Will.</li>
+      <li>Changes to Will progress.</li>
+      <li>Other Will UX refinements from earlier prompts.</li>
+      <li>Alternate executor in the Will, so the Vault can show an executor order of two.</li>
+      <li>Reuse the introduction’s family answers for a signed-in person, as sign-up already does.</li>
+      <li>Open Will items already listed in <a href="desktop/qa-report.html">Delivery QA</a> (witness confirmation step, scholar-approved share figures, legal text).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4 · Checks run</h2>
+    <ul>
+      <li>Both builds, 9 states × 27 Vault routes: every page renders, no script errors, no empty or “undefined” text, no sideways scroll.</li>
+      <li>Introduction: Start my Will → six steps → first Will task, on phone and desktop. Skip does the same.</li>
+      <li>Will pages compared before and after: identical.</li>
+      <li>Not checked by a person yet: screen-reader pass, and real recording or upload (the prototype stores names only).</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
