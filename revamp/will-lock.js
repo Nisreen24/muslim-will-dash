@@ -45,18 +45,9 @@
       var st = vaultState();
       return '<section class="card"><span class="chip ' + (st.healthy ? 'c-green' : 'c-gold') + '">' + st.label + '</span><h2 class="h2">My Vault</h2><p class="p">Everything important, in one secure place.</p><a class="btn navy" href="#/vault">Open My Vault' + ic('next') + '</a></section>';
     }
-    return '<section class="card"><p class="eyebrow">My Vault</p><h2 class="h2">Keep the rest of your estate organized.</h2><p class="p">Store important details your family may need later, in one secure place.</p><a class="btn navy" href="#/vault">See how it works' + ic('next') + '</a></section>';
+    return '<section class="card"><p class="eyebrow">My Vault</p><h2 class="h2">Keep the rest of your estate organized.</h2><p class="p">Store important details your family may need later — in one secure place.</p><a class="btn navy" href="#/vault">See how it works' + ic('next') + '</a></section>';
   };
-  banner = function () {
-    var v = S.vault;
-    if (!v.active || v.paused) return null;
-    var n = !desktop && typeof nba === 'function' ? nba() : null;          // phone: the Vault's own next step
-    if (n) return { eb: 'Next in your Vault', h: n.h, p: n.p, cta: n.cta, go: n.go };
-    if (!v.assets.length) return { eb: 'Next step', h: 'Add your assets.', p: 'List what your family should know about.', cta: 'Add assets', go: '#/vault/assets' };
-    if (!S.invited.length) return { eb: 'Next step', h: 'Keep your family in the loop.', p: 'Invite the people who may need access later.', cta: 'Invite family', act: 'invite' };
-    if (!v.reviewed) return { eb: 'Reminder', h: 'Review your plan.', p: 'Check your details are still right.', cta: 'Review now', act: 'reviewPlan' };
-    return null;
-  };
+  banner = function () { return vaultBanner(); };          // the shared Vault suggestion (../desktop/vault.js): same task and words on both builds
   function welcome() { return '<p class="eyebrow">Assalamu Alaykum</p><h1 class="h1">Welcome' + (S.vault.active ? ' back' : '') + ', ' + esc(firstName()) + '</h1>'; }
 
   if (desktop) {

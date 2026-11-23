@@ -66,7 +66,7 @@ window.MW_CONFIG = {
   vaultModules: [
     { id: 'obl', name: 'Obligations Register', short: 'Obligations', desc: 'Debts, mahr, zakat and religious dues.', types: ['Loan', 'Religious', 'Other'], amount: true, one: 'obligation' },
     { id: 'assets', name: 'Estate Inventory', short: 'Assets', desc: 'What you own, in Canada and abroad.', types: ['Property', 'Vehicle', 'Account', 'Other'], amount: true, one: 'asset' },
-    { id: 'sealed', name: 'Sealed Documents', short: 'Sealed', desc: 'Private files, released only on a trigger.', types: ['Note', 'Document'], amount: false, one: 'document' },
+    { id: 'sealed', name: 'Sealed Documents', short: 'Documents', desc: 'Private files, released only on a trigger.', types: ['Note', 'Document'], amount: false, one: 'document' },
     { id: 'words', name: 'Voice & Video Messages', short: 'Messages', desc: 'Words for the people you love.', types: ['Letter', 'Voice', 'Video'], amount: false, one: 'message' }
   ]
 };

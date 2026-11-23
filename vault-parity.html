@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Vault — mobile and desktop parity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<style>
+  :root { --page: #F3EEE5; --card: #FBF8F3; --ink: #172033; --text: #4F5854; --muted: #6E6A66; --line: #E7E1D8; --gold: #7A5B1E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 500 16px/1.55 Manrope, system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 40px 20px 80px; display: flex; flex-direction: column; gap: 28px; }
+  h1 { font: 400 40px/1.1 'DM Serif Display', serif; color: var(--ink); margin: 0; }
+  h2 { font: 400 26px/1.2 'DM Serif Display', serif; color: var(--ink); margin: 0 0 6px; }
+  h3 { font: 800 17px/1.3 Manrope, sans-serif; color: var(--ink); margin: 8px 0 0; }
+  p { margin: 0; max-width: 82ch; }
+  .eb { font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+  .band { background: linear-gradient(118deg, #10233F, #17345C); color: #F3EEE5; border: 0; }
+  .band h1 { color: #fff; } .band .eb { color: #C9A15B; } .band a { color: #F3EEE5; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px 22px; font-weight: 700; }
+  a { color: var(--ink); text-underline-offset: 3px; }
+  .wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 980px; }
+  th, td { text-align: left; vertical-align: top; padding: 11px 12px; border-top: 1px solid var(--line); }
+  th { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-top: 0; }
+  td:first-child { font-weight: 800; color: var(--ink); }
+  .st { white-space: nowrap; font-weight: 800; }
+  code { font-size: 14px; background: #EAE4DA; padding: 1px 6px; border-radius: 6px; }
+  ul, ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 82ch; }
+  pre { margin: 0; background: #EAE4DA; border-radius: 12px; padding: 16px; overflow-x: auto; font: 500 14px/1.5 ui-monospace, Consolas, monospace; color: var(--ink); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .two > div { display: flex; flex-direction: column; gap: 8px; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-weight: 700; color: var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <section class="band">
+    <p class="eb">My Vault · 23 Nov 2026</p>
+    <h1>One My Vault on mobile and desktop.</h1>
+    <p>The Vault was compared screen by screen on the mobile app, the desktop web and the web on a phone. One specification was written, and all three were changed to follow it. What differs now is layout.</p>
+    <div class="links">
+      <a href="desktop/index.html?demo=w-complete#/vault">Desktop · not subscribed</a>
+      <a href="desktop/index.html?demo=v-part#/vault">Desktop · Vault in progress</a>
+      <a href="revamp/index.html?demo=w-complete#/vault">Web on a phone · not subscribed</a>
+      <a href="revamp/index.html?demo=v-part#/vault">Web on a phone · in progress</a>
+      <a href="https://nisreen24.github.io/muslim-will-prototype/design/simulator-v41.html?tool=t-willdone">Mobile app · not subscribed</a>
+      <a href="https://nisreen24.github.io/muslim-will-prototype/design/simulator-v41.html?tool=t-vaultpart">Mobile app · in progress</a>
+      <a href="vault-spec.md">Canonical specification</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>1 · Comparison matrix</h2>
+    <p>“Before” is what was found. “Now” is after the changes.</p>
+    <p class="key"><span>✅ Same</span><span>🟡 Similar but inconsistent</span><span>❌ Missing on one platform</span><span>⚠️ Different business logic</span></p>
+    <div class="wrap"><table>
+      <thead><tr><th>Feature / screen</th><th>Mobile, before</th><th>Desktop, before</th><th>Difference</th><th>Action taken</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td>Vault entry when not subscribed</td><td>One screen: four features, price, Start My Vault</td><td>One page: headline, price and button first, features below</td><td class="st">❌</td><td>No guided explanation on either. Five-step introduction added to both; price shown once, at the end.</td><td class="st">✅</td></tr>
+        <tr><td>Introduction wording</td><td>“Store private notes for later access”, “Leave personal wishes and guidance”</td><td>Module descriptions from config</td><td class="st">🟡</td><td>One set of five messages, word for word, on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Module names</td><td>Sealed Documents on screens; “Disclosure”, “Seal a record”, “Sealed records”, “Final Words” in sheets, toasts and Profile</td><td>Sealed Documents, Voice &amp; Video Messages; “Final messages”, “Sealed” in figures</td><td class="st">🟡</td><td>Four names fixed. Retired words removed everywhere.</td><td class="st">✅</td></tr>
+        <tr><td>Price</td><td>$7.99 CAD / month, from the API mock</td><td>$7.99 CAD / month, from config</td><td class="st">✅</td><td>None.</td><td class="st">✅</td></tr>
+        <tr><td>Checkout total</td><td>GST 13% added ($9.03) and a referral code (10% off)</td><td>$7.99, no tax line, no code</td><td class="st">⚠️</td><td>Left as found. Needs a business decision (question 1).</td><td class="st">⚠️</td></tr>
+        <tr><td>Checkout wording</td><td>“Pay &amp; activate”, “Cancel anytime”</td><td>“Checkout”, “Pay $7.99 CAD”; the phone layout said “Pay … and start”</td><td class="st">🟡</td><td>Button “Pay &lt;amount&gt; and start”. Same billing line and exit line.</td><td class="st">✅</td></tr>
+        <tr><td>After payment</td><td>“My Vault is active” → Open My Vault</td><td>Desktop: same page. Phone layout: jumped straight into guided setup</td><td class="st">⚠️</td><td>Same confirmation on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Leaving the subscription</td><td>Two exits: Profile “Cancel My Vault” (billing ends, data kept) and Account “Close my Vault” (deleted after 90 days)</td><td>One: Pause or Close in Account and data</td><td class="st">⚠️</td><td>One exit everywhere. The Profile row now opens Account and data.</td><td class="st">✅</td></tr>
+        <tr><td>Paused Vault</td><td>Called read-only, but edit, remove and sign still worked</td><td>Items read-only; adding people still allowed</td><td class="st">⚠️</td><td>Read-only everywhere, people included.</td><td class="st">✅</td></tr>
+        <tr><td>Closed Vault</td><td>No closed state; “reopen within 90 days” had no path</td><td>Closed notice and Reopen</td><td class="st">❌</td><td>Closed state and Reopen added to mobile.</td><td class="st">✅</td></tr>
+        <tr><td>Payment failed</td><td>Not modelled</td><td>Notice and Update card</td><td class="st">❌</td><td>Added to mobile.</td><td class="st">✅</td></tr>
+        <tr><td>Yearly review</td><td>One tap that recorded a date</td><td>Four steps: values, people, release, check-in</td><td class="st">❌</td><td>Four-step review added to mobile. “Due” shown only when nothing else is open.</td><td class="st">✅</td></tr>
+        <tr><td>Overview header</td><td>Patriva · Secure Vault / My Vault</td><td>Desktop same. Phone layout: a different title</td><td class="st">🟡</td><td>Same header on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Readiness</td><td>Seven checks</td><td>Eight: also a recipient with no phone number</td><td class="st">⚠️</td><td>Same checks, same order.</td><td class="st">✅</td></tr>
+        <tr><td>Next step</td><td>One task</td><td>Desktop: two tasks in one sentence. Phone layout: its own card and different links</td><td class="st">🟡</td><td>One task, same sentence, same destination.</td><td class="st">✅</td></tr>
+        <tr><td>Guidance button</td><td>“Finish with guidance” even on an empty Vault</td><td>“Finish…”, “Continue…”, “Start…”, “Guide me step by step”</td><td class="st">🟡</td><td>“Start with guidance”, then “Continue with guidance”.</td><td class="st">✅</td></tr>
+        <tr><td>Figures</td><td>Estate value, Obligations, Sealed, Final messages</td><td>Same labels; phone layout showed $ instead of CAD</td><td class="st">🟡</td><td>Estate value · Obligations · Sealed documents · Messages, as CAD.</td><td class="st">✅</td></tr>
+        <tr><td>Section status</td><td>Three rules: “Needs details” on the hub, “Incomplete” in lists, a third for documents</td><td>Not started / Needs details / Complete; desktop also “N scheduled”</td><td class="st">⚠️</td><td>One rule. Rows say only “Add details” or “Confirm beneficiary”.</td><td class="st">✅</td></tr>
+        <tr><td>Section descriptions and empty states</td><td>Own wording, e.g. “Protect important information until it is needed”</td><td>Desktop one generic line; phone layout one per section</td><td class="st">🟡</td><td>One title, one line and one button per section.</td><td class="st">✅</td></tr>
+        <tr><td>Add buttons</td><td>Add obligation · Add asset · Add sealed document · New message</td><td>Add an obligation · Add an asset · Add a document; desktop had “Record voice / Record video”</td><td class="st">🟡</td><td>Add an obligation · Add an asset · Add a document · Add a message.</td><td class="st">✅</td></tr>
+        <tr><td>Filters</td><td>Obligations by 5 categories; documents by type; messages Video / Audio; a search box that did nothing</td><td>Obligations by kind; inventory by category; documents and messages by release</td><td class="st">⚠️</td><td>Web rule on all three. Search box removed.</td><td class="st">✅</td></tr>
+        <tr><td>Viewing an item</td><td>Obligations and assets opened the form directly</td><td>A read-only view first, then Edit or Remove</td><td class="st">❌</td><td>View added for all four sections on mobile.</td><td class="st">✅</td></tr>
+        <tr><td>Obligation form</td><td>Free name, 5 categories, creditor, amount and currency required</td><td>Kind, a follow-up question, owed to, amount, start date, how to repay, joint, notes, proof</td><td class="st">⚠️</td><td>Mobile form rebuilt on the web model. Amount optional on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Asset form</td><td>13 categories, 8 countries, beneficiary defaulted to “Not sure”</td><td>14 categories, 12 countries, beneficiary name required when Yes</td><td class="st">⚠️</td><td>Same categories, countries, currencies and rules.</td><td class="st">✅</td></tr>
+        <tr><td>Sealed document</td><td>Three sub-types; recipient as free text</td><td>One object; recipients chosen from Trusted People</td><td class="st">⚠️</td><td>One object, recipients from Trusted People only.</td><td class="st">✅</td></tr>
+        <tr><td>Message</td><td>Video / Audio, email subject, attach a file, four delivery options</td><td>Voice / Video, five delivery options including a life event</td><td class="st">⚠️</td><td>Web model on all three. See open item A.</td><td class="st">🟡</td></tr>
+        <tr><td>Remove an item</td><td>“Delete this disclosure?”, “Disclosure deleted”</td><td>“Remove this item?”, “Removed”</td><td class="st">🟡</td><td>Remove wording everywhere.</td><td class="st">✅</td></tr>
+        <tr><td>Trusted People</td><td>No date of birth, no invite; said recipients are never contacted</td><td>Date of birth, Tell them now, Resend invite, invite status</td><td class="st">⚠️</td><td>Web rule on mobile. Removing a person also removes them from items.</td><td class="st">✅</td></tr>
+        <tr><td>Release settings</td><td>Four steps, executor, counts</td><td>Same; phone layout had no executor card</td><td class="st">🟡</td><td>Executor card on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Reminders</td><td>Eight, two always on</td><td>Same list</td><td class="st">✅</td><td>Captions aligned.</td><td class="st">✅</td></tr>
+        <tr><td>Account and data</td><td>Download, pause, close</td><td>Same, plus plan and status; two wordings between desktop and phone layout</td><td class="st">🟡</td><td>Same order and wording. Plan card added to mobile.</td><td class="st">✅</td></tr>
+        <tr><td>Guided setup</td><td>No way out except stepping back; a wrong hint</td><td>Save and exit, skip, review</td><td class="st">❌</td><td>Save and exit added to mobile. “Something else” saved as Miscellaneous everywhere.</td><td class="st">✅</td></tr>
+        <tr><td>Home</td><td>“Up to date” while the Vault showed open tasks</td><td>Same problem; two different suggestions between desktop and phone layout</td><td class="st">🟡</td><td>Home follows readiness: “N% ready”, and the same next step.</td><td class="st">✅</td></tr>
+        <tr><td>Prototype states</td><td>Empty, in progress, all set</td><td>Nine states</td><td class="st">❌</td><td>The same nine on all three.</td><td class="st">✅</td></tr>
+        <tr><td>Icons</td><td>Inventory “vault”, messages “pencil” in places</td><td>Sealed “mail”</td><td class="st">🟡</td><td>Scale · list · lock · video.</td><td class="st">✅</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>2 · Canonical information architecture</h2>
+<pre>My Vault
+├─ Introduction (not subscribed)      5 steps, then checkout
+├─ Checkout → “My Vault is active”
+├─ Overview
+│   ├─ Readiness · one next step · guidance
+│   ├─ Manage your Vault
+│   │   ├─ Obligations Register       list · view · add · edit
+│   │   ├─ Estate Inventory           list · view · add · edit
+│   │   ├─ Sealed Documents           list · view · add · edit
+│   │   └─ Voice &amp; Video Messages     list · view · add · edit
+│   ├─ People and release
+│   │   ├─ Trusted People
+│   │   └─ Release settings
+│   └─ Vault settings
+│       ├─ Reminders
+│       └─ Account and data           plan · download · pause · close
+├─ Guided setup
+└─ Yearly review                      4 steps</pre>
+    <p>Short labels where space is tight: Obligations · Assets · Documents · Messages. Objects: obligation · asset · document · message. Action words: Add · Edit · Remove · Save · View · Continue · Review · Manage · Start · Resume.</p>
+    <p>Full detail — states, fields, option lists, status labels, wording — is in <a href="vault-spec.md">vault-spec.md</a>. Both prototypes were built from that file.</p>
+  </section>
+
+  <section>
+    <h2>3 · Inconsistencies found</h2>
+    <p>The matrix lists them. In short:</p>
+    <ul>
+      <li><b>Business logic differed in 12 places</b>: checkout total, what happens after payment, how a subscription ends, what “paused” allows, readiness checks, status rules, filters, and the data collected for obligations, assets, documents, messages and people.</li>
+      <li><b>Six things existed on one platform only</b>: the closed state, payment failed, the yearly review, item views, Save and exit in guided setup, and most prototype states. All six were missing on mobile.</li>
+      <li><b>The rest was wording</b>: module names, button labels, empty states, figures, icons.</li>
+      <li><b>Inside mobile itself</b>, the Vault used three names for sealed items and four for messages, and three different rules for “complete”.</li>
+      <li><b>Inside the web</b>, the desktop and phone layouts disagreed on checkout, the step after payment, the next-step wording and several form labels.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4 · Changes applied</h2>
+    <div class="two">
+      <div>
+        <h3>Mobile app</h3>
+        <ul>
+          <li>Five-step introduction replaces the single discovery screen.</li>
+          <li>Checkout button and exit wording; Profile “Cancel My Vault” now leads to Account and data.</li>
+          <li>New states: payment failed, yearly review due, paused (truly read-only), closed with Reopen.</li>
+          <li>Overview: same readiness checks, one next step, guidance labels, figures, row status.</li>
+          <li>Four sections rebuilt: descriptions, empty states, filters, item views, Remove wording.</li>
+          <li>Forms rebuilt on the web data model: obligation, asset, sealed document, message.</li>
+          <li>Trusted People: date of birth, invite status, Tell them now, Resend invite.</li>
+          <li>Four-step yearly review. Guided setup: Save and exit, corrected hints.</li>
+          <li>Home shows “N% ready” until the Vault is ready.</li>
+          <li>Every retired word removed.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Web · desktop and phone layout</h3>
+        <ul>
+          <li>Introduction: one page on desktop, five screens on a phone, same words.</li>
+          <li>One checkout and one confirmation for both layouts. Paying clears Paused and Closed.</li>
+          <li>Overview: one next step, same guidance labels, review-due rule, figures in CAD, same headings.</li>
+          <li>Section descriptions, empty states, form titles, hints and error messages now come from one place.</li>
+          <li>Messages: one “Add a message”; voice or video is chosen in the form.</li>
+          <li>Amount and value are optional; an empty one marks the item “Add details”.</li>
+          <li>People, release and account pages say the same thing in both layouts.</li>
+          <li>Paused also blocks adding people. Notices on pause, resume, close, reopen.</li>
+          <li>Home follows readiness in both layouts.</li>
+          <li>Short label “Documents”; sealed icon is a lock.</li>
+        </ul>
+      </div>
+    </div>
+    <p>Files — web: <code>desktop/vault.js</code>, <code>revamp/vault.js</code>, <code>revamp/vault.css</code>, <code>desktop/approved.css</code>, <code>revamp/config.js</code>, <code>revamp/will-lock.js</code>, both <code>index.html</code>. Mobile: the “v44” layer in <code>design/simulator-v41.html</code>. The Will was not changed on either.</p>
+  </section>
+
+  <section>
+    <h2>5 · Vault introduction</h2>
+    <p>Shown before any price or payment. Phone: one message per screen, Back and Continue, “Step n of 5”. Desktop: one page in the same order, one button at the end.</p>
+    <div class="wrap"><table>
+      <thead><tr><th>Step</th><th>Headline</th><th>What it says</th></tr></thead>
+      <tbody>
+        <tr><td>1 · My Vault</td><td>Keep the rest of your estate organized.</td><td>Store important details your family may need later — in one secure place. <b>What is My Vault?</b> Keep important information together. My Vault organizes estate information that doesn’t belong inside the Will itself.</td></tr>
+        <tr><td>2 · What can I keep there?</td><td>Four places for what matters.</td><td>Obligations Register — Track debts, zakat and mahr. Estate Inventory — List assets, accounts and property. Sealed Documents — Keep sensitive information private. Voice &amp; Video Messages — Leave personal guidance for later.</td></tr>
+        <tr><td>3 · Why does it matter?</td><td>Make things easier for your family.</td><td>Important information is easier to find when it is organized in one place. Your Will decides who inherits. Your Vault helps your executor find everything.</td></tr>
+        <tr><td>4 · How does access work?</td><td>Your information stays private and secure.</td><td>You decide who receives what, and when. Encrypted and private. Released only after verification. Each person receives only their part.</td></tr>
+        <tr><td>5 · Subscription</td><td>One plan. Everything included.</td><td>$7.99 CAD / month. Billed each month until you pause or close it. All four Vault sections · Trusted People and release settings · Reminders and a yearly review · Download a copy anytime. Pause or close anytime in Account and data. Button: <b>Start My Vault</b>.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>6 · Checks run</h2>
+    <ul>
+      <li><b>Same words, three surfaces.</b> 23 screens and states were opened on the mobile app, the web on a phone and the desktop, and checked for the same required text and for retired words: 69 checks. 68 pass on the rendered text; in the last one the app keeps the asset categories inside a closed picker, so the list was confirmed in its source instead. Covered: the five introduction steps, checkout, the Overview in seven states, the four empty sections, two add forms, Trusted People, Release settings, Reminders, Account and data.</li>
+      <li><b>Web journey</b>, both layouts: not subscribed → introduction → Start My Vault → pay → confirmation → Open My Vault → add asset → view → edit → back → add obligation → filter → pause → resume → close → reopen. Same steps and messages.</li>
+      <li><b>Web sweep</b>: 9 states × 42 routes on both layouts. No script errors, no blank or “undefined” text, no sideways scroll at 390 and 1440 pixels.</li>
+      <li><b>Mobile</b>: the session that built the mobile layer reports every Vault state rendering with no script errors. The full add → view → edit journey on mobile was not re-run independently here.</li>
+      <li><b>Not checked</b>: a screen reader, widths between 390 and 1440, real recording or upload (the prototypes store names only), and the mobile forms field by field against the web by a person.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>7 · Still open</h2>
+    <h3>Small differences left</h3>
+    <ul>
+      <li><b>A.</b> In guided setup, the message step offers four delivery options on the web; the full form and the mobile app offer five (“On a life event”).</li>
+      <li><b>B.</b> Mobile checkout uses its three-step header instead of the title “Start My Vault”, and asks for a Terms tick.</li>
+      <li><b>C.</b> “Go to the next item” opens the section on mobile; on the web it opens the exact item when one needs fixing.</li>
+      <li><b>D.</b> In the yearly review, “Change” opens the item view on mobile and the form on the web.</li>
+      <li><b>E.</b> Mobile list rows tag obligations with the short kind (“Bank debt”); the web groups them under headings.</li>
+      <li><b>F.</b> The final fallback can still be signed while the Vault is paused on the web.</li>
+      <li><b>G.</b> “Plan and billing” is a desktop page; on a phone and in the app the plan sits in Account and data.</li>
+    </ul>
+    <h3>Business questions</h3>
+    <ol>
+      <li><b>Tax and referral code.</b> The app charges $9.03 (GST 13%) and accepts a referral code. The web charges $7.99 with neither. Which is right? Is 13% GST or Ontario HST?</li>
+      <li><b>Paused price.</b> Both say “at a lower price”. What is it?</li>
+      <li><b>Release conditions.</b> The introduction now states that nothing is released until a death certificate or a hospital letter is verified. Is that confirmed by operations and legal?</li>
+      <li><b>Amount optional.</b> An obligation or asset can now be saved without a value and is marked “Add details”. Acceptable?</li>
+      <li><b>Second executor.</b> The Vault shows an executor order, but the Will collects one executor. The Will is frozen.</li>
+      <li><b>Home when paused or payment failed.</b> Should Home still say “Up to date”?</li>
+      <li><b>Vault before the Will is complete.</b> The web shows “Preview · activates after attestation”. The app does not. Is the Vault usable before the Will is signed?</li>
+      <li><b>Telling recipients.</b> Recipients are contacted only when the owner chooses “Tell them now”. Confirm.</li>
+    </ol>
+  </section>
+</main>
+</body>
+</html>

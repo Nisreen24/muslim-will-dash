@@ -281,3 +281,17 @@ label.field > .label i { font: 500 var(--mw-label)/1.3 var(--mw-sans); letter-sp
 .vview .kv b { overflow-wrap: anywhere; }
 .vrow > .lnk, .prow > .lnk { background: none; border: 0; cursor: pointer; font: inherit; font-weight: 800; white-space: nowrap; }
 fieldset > button.lnk { background: none; border: 0; cursor: pointer; font: inherit; font-weight: 800; }
+
+/* ---------- My Vault introduction (not subscribed): one page, five messages, one call to action ---------- */
+.vi-sec { gap: clamp(18px, 1.6vw, 26px); }
+.vi-sec .stack > .p { max-width: 60ch; }
+.vi-card { display: flex; flex-direction: column; gap: 6px; padding: 20px 22px; border-radius: 16px; background: #F3EEE5; border: 1px solid var(--mw-gold-line, #E3D5B8); }
+.vi-card.dark { background: rgba(255,255,255,.07); border-color: rgba(201,161,91,.32); max-width: 520px; }
+.vi-card.dark .h3 { color: #FBF8F3; } .vi-card.dark .p { color: #E9E3D8; font-size: 17px; }
+.vi-mod { display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 16px; background: #F3EEE5; }
+.vi-mod .ico { width: 52px; height: 52px; }
+.vi-pt { display: flex; gap: 14px; align-items: flex-start; }
+.vi-pt .ico { flex: none; }
+.vi-sub { display: grid !important; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto; align-items: center; gap: clamp(24px, 3vw, 48px); }
+.vi-cta .btn { min-height: 56px; padding: 0 32px; font-size: 18px; white-space: nowrap; }
+@media (max-width: 1100px) { .vi-sub { grid-template-columns: 1fr; } .vi-cta .btn { width: 100%; } }

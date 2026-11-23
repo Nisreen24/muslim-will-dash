@@ -49,3 +49,12 @@ fieldset > button.lnk { background: none; border: 0; font: inherit; font-weight:
 .li.col .row { gap: 12px; }
 /* Very narrow phones (320px): the switch already shows On / Off, so the word gives its room to the title. */
 @media (max-width: 359px) { .li > .small.strong { display: none; } .li { gap: 10px; } }
+/* Overview: a caption under each figure, the item count beside the status, and the Introduction steps. */
+.stat small { display: block; font-size: 14px; color: #BEB8AD; margin-top: 2px; }
+.stat b { overflow-wrap: anywhere; }
+.li .tags .cnt { font-weight: 700; color: #7A5B1E; align-self: center; }
+.vhero + .scr .card.tint .tick { font-weight: 600; }
+
+/* Vault introduction: the step dots and the single button stay above the tab bar on every step. */
+.vdock { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-direction: column; gap: 12px; padding-top: 24px; background: linear-gradient(rgba(243,238,229,0), var(--page) 20px); }
+.scr.tabs .vdock { bottom: 92px; }
